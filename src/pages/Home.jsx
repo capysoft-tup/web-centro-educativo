@@ -1,16 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navar';
+import Button from '../components/Button';
 
 const Home = () => {
+
+  const navigate = useNavigate()
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Inicio</h1>
-      <p>Bienvenido al Centro Educativo.</p>
-      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-        <Link to="/about">Sobre Nosotros</Link>
-        <Link to="/contact">Contacto</Link>
+    <>
+      <Navbar>
+        <Button
+          onClick={() => navigate('/about')} size='small'
+        >About</Button>
+        <Button
+          onClick={() => navigate('/contact')} size='small'
+        >Contact</Button>
+      </Navbar>
+      <div style={{ padding: '2rem' }}>
+        <h1>Inicio</h1>
+        <p>Bienvenido al Centro Educativo.</p>
       </div>
-    </div>
+    </>
   );
 };
 
