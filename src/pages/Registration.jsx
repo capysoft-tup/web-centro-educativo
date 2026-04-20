@@ -1,17 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+import Navbar from '../components/Navar';
 
-const Home = () => {
+const Registration = () => {
+    const navigate = useNavigate()
     return (
-        <div style={{ padding: '2rem' }}>
-            <h1>Inicio</h1>
-            <p>Registro.</p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <Link to="/about">Sobre Nosotros</Link>
-                <Link to="/contact">Contacto</Link>
+        <>
+            <Navbar>
+                <Button
+                    onClick={() => navigate('/')} size='small'
+                >Volver al inicio</Button>
+            </Navbar>
+            <div style={{ padding: '2rem' }}>
+                <h1>Inicio</h1>
+                <p>Registro.</p>
             </div>
-        </div>
+        </>
     );
 };
 
-export default Home;
+export default Registration;

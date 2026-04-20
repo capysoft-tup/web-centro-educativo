@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Home = () => {
+const EmploymentRequest = () => {
     return (
         <div style={{ padding: '2rem' }}>
             <h1>Inicio</h1>
@@ -14,4 +14,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default EmploymentRequest;

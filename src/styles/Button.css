@@ -1,0 +1,92 @@
+/* Contenedor centralizado para estilos de botones globales */
+
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  outline: none;
+  text-decoration: none;
+}
+
+.custom-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tamaños */
+.custom-button.small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.custom-button.medium {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+}
+
+.custom-button.large {
+  padding: 0.8rem 1.8rem;
+  font-size: 1.1rem;
+}
+
+/* Variantes - Primary */
+.custom-button.primary {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+}
+
+.custom-button.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(167, 119, 227, 0.5);
+}
+
+.custom-button.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Variantes - Secondary */
+.custom-button.secondary {
+  background: transparent;
+  color: #a777e3;
+  border: 2px solid #a777e3;
+}
+
+.custom-button.secondary:hover:not(:disabled) {
+  background: #a777e3;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(167, 119, 227, 0.3);
+}
+
+.custom-button.secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Variantes - Ghost (sutil, ideal para acompañar al Navbar sin sobrecargarlo visualmente) */
+.custom-button.ghost {
+  background: transparent;
+  color: #555;
+  border: 1px solid transparent;
+}
+
+.custom-button.ghost:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+  color: #a777e3;
+}
+
+@media (prefers-color-scheme: dark) {
+  .custom-button.ghost {
+    color: #e0e0e0;
+  }
+  .custom-button.ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+}

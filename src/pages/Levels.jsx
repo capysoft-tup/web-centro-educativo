@@ -1,17 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navar';
+import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Levels = () => {
+  const navigate = useNavigate()
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Inicio</h1>
+    <>
+      <Navbar>
+        <Button onClick={() => navigate('/')} size="small">
+          Volver al inicio
+        </Button>
+      </Navbar>
+      <div style={{ padding: '2rem' }}>
+      <h1>Niveles</h1>
       <p>Niveles educativos.</p>
-      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-        <Link to="/about">Sobre Nosotros</Link>
-        <Link to="/contact">Contacto</Link>
-      </div>
     </div>
+    </>
   );
 };
 
-export default Home;
+export default Levels;

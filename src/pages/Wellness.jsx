@@ -1,17 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Wellness = () => {
+    const navigate = useNavigate()
     return (
-        <div style={{ padding: '2rem' }}>
-            <h1>Inicio</h1>
-            <p>Bienestar estudiantil.</p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <Link to="/about">Sobre Nosotros</Link>
-                <Link to="/contact">Contacto</Link>
+        <>
+            <Navbar>
+                <Button
+                    onClick={() => navigate('/')} size='small'
+                >Volver al inicio</Button>
+            </Navbar>
+            <div style={{ padding: '2rem' }}>
+                <h1>Bienestar estudiantil</h1>
+                <p>En nuestro centro, el bienestar de los estudiantes es nuestra prioridad. Ofrecemos una variedad de programas y recursos para apoyar su desarrollo académico, emocional y social.</p>
             </div>
-        </div>
+        </>
     );
 };
 
-export default Home;
+export default Wellness;    
