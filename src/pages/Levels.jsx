@@ -3,21 +3,21 @@ import Navbar from '../components/Navar';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
-const Contact = () => {
+const Levels = () => {
   const navigate = useNavigate()
   return (
     <>
       <Navbar>
-        <Button
-          onClick={() => navigate('/')} size='small'
-        >Volver al inicio</Button>
+        <Button onClick={() => navigate('/')} size="small">
+          Volver al inicio
+        </Button>
       </Navbar>
       <div style={{ padding: '2rem' }}>
-        <h1>Contacto</h1>
-        <p>Ponte en contacto con nosotros enviando un mensaje directo.</p>
-      </div>
+      <h1>Niveles</h1>
+      <p>Niveles educativos.</p>
+    </div>
     </>
   );
 };
 
-export default Contact;
+export default Levels;
