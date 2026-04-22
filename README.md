@@ -1,16 +1,55 @@
-# React + Vite
+# 🏫 Proyecto Centro Educativo "Educar para Transformar"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es el repositorio oficial para el desarrollo del ecosistema digital del centro educativo.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠 Guía de Trabajo con Ramas (Git Flow)
 
-## React Compiler
+Para mantener la estabilidad del proyecto y asegurar que las entregas sean consistentes, utilizaremos un flujo de trabajo basado en dos ramas principales:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Rama `master` (Producción)
+* **Propósito:** Contiene la versión estable, testeada y funcional del proyecto.
+* **Despliegue:** Es la rama que Vercel utiliza para generar la URL oficial que verán los docentes.
+* **Regla de oro:** **NUNCA** se trabaja directamente sobre esta rama. Solo se reciben cambios mediante *merges* desde `develop`.
 
-## Expanding the ESLint configuration
+### 2. Rama `develop` (Desarrollo e Integración)
+* **Propósito:** Es nuestra rama de trabajo diario. Aquí es donde integramos las nuevas funcionalidades y correcciones de errores.
+* **Despliegue:** Vercel generará automáticamente una **Preview URL** cada vez que subamos cambios aquí para que podamos testearlos en vivo.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🔄 Comandos Rápidos para el Equipo
+
+### 🔹 Al iniciar una tarea de desarrollo:
+Asegúrate de tener la última versión del código de tus compañeros:
+```
+git checkout develop
+git pull origin develop
+```
+Al finalizar una tarea
+Cuando hayas terminado de maquetar un componente o página (ej. Wellness.jsx o Registration.jsx):
+```
+git add .
+git commit -m "Tipo de cambio: Descripción breve de lo que hiciste"
+git push origin develop
+```
+### 🔹 Para pasar a Producción (Vía Pull Request)
+Cuando la rama `develop` sea estable y esté lista para la entrega oficial:
+1.  Andá a GitHub y seleccioná **"New Pull Request"**.
+2.  Configurá `base: master` <- `compare: develop`.
+3.  Asigná a un compañero para que revise los cambios (**Reviewers**).
+4.  Una vez aprobado, realizá el **"Merge pull request"**.
+
+### 🚀 Entorno y Tecnologías
+* Frontend: React + Vite
+* Estilos: CSS Modules
+* Despliegue: Vercel
+* Control de Versiones: Git / GitHub
+* Calidad de Código: Husky + Prettier + ESLint
+
+### 👥 Integrantes del Equipo
+* Erick Vicentin (Responsable de Entorno y GitHub)
+* Damian Ramirez
+* Lautaro Höfer
+* Fabricio Alegre
