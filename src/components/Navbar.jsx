@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import '../styles/Navar.css';
+import '../styles/Navbar.css';
 import Button from './Button';
 import logo from '../assets/logo.png'
 
@@ -19,7 +19,7 @@ const Navbar = () => {
           <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inicio</NavLink>
           <NavLink to="/wellness" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Bienestar</NavLink>
           <NavLink to="/news" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Noticias</NavLink>
-          <NavLink to="/about" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Galería</NavLink>
+          <NavLink to="/gallery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Galería</NavLink>
           <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Contacto</NavLink>
           <NavLink to="/register" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inscripciones</NavLink>
           <NavLink to="/employment-request" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Empleo</NavLink>
