@@ -1,6 +1,5 @@
 import React from "react";
 import "../styles/LittleCard.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const LittleCard = ({
     title,
