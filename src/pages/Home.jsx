@@ -1,21 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navar';
-import Button from '../components/Button';
+import Navbar from '../components/Navbar';
 
 const Home = () => {
-
-  const navigate = useNavigate()
   return (
     <>
-      <Navbar>
-        <Button
-          onClick={() => navigate('/about')} size='small'
-        >About</Button>
-        <Button
-          onClick={() => navigate('/contact')} size='small'
-        >Contact</Button>
-      </Navbar>
+      <Navbar />
       <div style={{ padding: '2rem' }}>
         <h1>Inicio</h1>
         <p>Bienvenido al Centro Educativo.</p>

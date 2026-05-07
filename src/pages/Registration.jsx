@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import Navbar from '../components/Navar';
+import Navbar from '../components/Navbar';
 
 const Registration = () => {
     const navigate = useNavigate()

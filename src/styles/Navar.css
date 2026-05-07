@@ -1,22 +1,15 @@
 .custom-navbar {
-  /* Diseño premium con efecto Glassmorphism */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  padding: 1rem 2rem;
-  position: sticky;
-  top: 0;
   z-index: 1000;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  height: 75px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Modo oscuro automático */
 @media (prefers-color-scheme: dark) {
   .custom-navbar {
-    background: rgba(30, 30, 30, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
@@ -25,52 +18,88 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
+  height: 100%;
 }
 
 .navbar-logo {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 0;
-  /* Gradiente moderno para el texto del logo */
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.navbar-actions {
+  flex: 1;
   display: flex;
-  gap: 1rem;
+  margin-left: 2rem;
   align-items: center;
-}
-
-/* Estilos genéricos para los botones que pases dentro */
-.navbar-actions button {
-  background-color: transparent;
-  color: #333;
-  border: 1px solid #a777e3;
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 24px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 15%;
 }
 
-.navbar-actions button:hover {
-  background-color: #a777e3;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(167, 119, 227, 0.4);
+.navbar-logo-icon {
+  height: 60px;
+  width: 60px;
+  object-fit: fill;
+  border-radius: 50px;
 }
 
 @media (prefers-color-scheme: dark) {
-  .navbar-actions button {
-    color: #e0e0e0;
+  .navbar-logo {
+    color: #60a5fa;
   }
-  .navbar-actions button:hover {
-    color: white;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  align-items: center;
+  max-width: 70%;
+  
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #000000;
+  font-weight: 500;
+  font-size: 0.95rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 0.2rem;
+  position: relative;
+}
+
+.nav-link.active {
+  font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  .nav-link {
+    color: #000000;
   }
+  .nav-link:hover {
+    color: #60a5fa;
+  }
+  .nav-link.active {
+    border-bottom-color: #17cb20;
+  }
+
+  /* Creamos la línea verde */
+  .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #17cb20;
+    border-radius: 5px;
+  }
+}
+
+.navbar-actions {
+  flex: 1;
+  margin-right: 2rem;
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  max-width: 15%;
 }

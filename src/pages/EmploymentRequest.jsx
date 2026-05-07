@@ -1,16 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Button from '../components/Button';
 
 const EmploymentRequest = () => {
+    const navigate = useNavigate()
     return (
-        <div style={{ padding: '2rem' }}>
-            <h1>Inicio</h1>
-            <p>Solicitud de empleo.</p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <Link to="/about">Sobre Nosotros</Link>
-                <Link to="/contact">Contacto</Link>
+        <>
+            <Navbar>
+                <Button
+                    onClick={() => navigate('/')} size='small'
+                >Volver al inicio</Button>
+            </Navbar>
+            <div style={{ padding: '2rem' }}>
+                <h1>Solicitud de empleo</h1>
+                <p>Formulario de solicitud de empleo.</p>
             </div>
-        </div>
+        </>
     );
 };
 

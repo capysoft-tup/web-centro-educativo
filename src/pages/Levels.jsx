@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../components/Navar';
+import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,9 +13,9 @@ const Levels = () => {
         </Button>
       </Navbar>
       <div style={{ padding: '2rem' }}>
-      <h1>Niveles</h1>
-      <p>Niveles educativos.</p>
-    </div>
+        <h1>Niveles</h1>
+        <p>Niveles educativos.</p>
+      </div>
     </>
   );
 };
