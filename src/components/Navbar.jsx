@@ -26,7 +26,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-actions">
-          <Button variant="primary" onClick={() => alert('Acceso Usuario')}>Acceso Usuario</Button>
+          <Button variant="primary" onClick={() => navigate('/login')}>Acceso Usuario</Button>
         </div>
       </div>
     </nav>
