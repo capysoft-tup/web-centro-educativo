@@ -1,0 +1,105 @@
+.custom-navbar {
+  z-index: 1000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  height: 75px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  .custom-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.navbar-logo {
+  flex: 1;
+  display: flex;
+  margin-left: 2rem;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+  max-width: 15%;
+}
+
+.navbar-logo-icon {
+  height: 60px;
+  width: 60px;
+  object-fit: fill;
+  border-radius: 50px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar-logo {
+    color: #60a5fa;
+  }
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  align-items: center;
+  max-width: 70%;
+  
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #000000;
+  font-weight: 500;
+  font-size: 0.95rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 0.2rem;
+  position: relative;
+}
+
+.nav-link.active {
+  font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  .nav-link {
+    color: #000000;
+  }
+  .nav-link:hover {
+    color: #60a5fa;
+  }
+  .nav-link.active {
+    border-bottom-color: #17cb20;
+  }
+
+  /* Creamos la línea verde */
+  .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #17cb20;
+    border-radius: 5px;
+  }
+}
+
+.navbar-actions {
+  flex: 1;
+  margin-right: 2rem;
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  max-width: 15%;
+}

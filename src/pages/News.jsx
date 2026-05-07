@@ -1,17 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navar';
-import Button from '../components/Button';
+import Navbar from '../components/Navbar';
 
 const News = () => {
-    const navigate = useNavigate()
     return (
         <>
-            <Navbar>
-                <Button
-                    onClick={() => navigate('/')} size='small'
-                >Volver al inicio</Button>
-            </Navbar>
+            <Navbar />
             <div style={{ padding: '2rem' }}>
                 <h1>Novedades</h1>
                 <p>Noticias del Centro Educativo.</p>
