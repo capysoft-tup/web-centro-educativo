@@ -1,16 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const EmploymentRequest = () => {
     return (
-        <div style={{ padding: '2rem' }}>
-            <h1>Inicio</h1>
-            <p>Solicitud de empleo.</p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <Link to="/about">Sobre Nosotros</Link>
-                <Link to="/contact">Contacto</Link>
+        <>
+            <Navbar />
+            <div style={{ padding: '2rem' }}>
+                <h1>Solicitud de empleo</h1>
+                <p>Formulario de solicitud de empleo.</p>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -4,9 +4,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-weight: 600;
-  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  border-radius: 9999px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
@@ -19,7 +19,6 @@
   cursor: not-allowed;
 }
 
-/* Tamaños */
 .custom-button.small {
   padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
@@ -35,23 +34,22 @@
   font-size: 1.1rem;
 }
 
-/* Variantes - Primary */
 .custom-button.primary {
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background: #1a56db;
   color: white;
-  box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
 }
 
 .custom-button.primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(167, 119, 227, 0.5);
+  background: #1a56db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .custom-button.primary:active:not(:disabled) {
   transform: translateY(0);
 }
 
-/* Variantes - Secondary */
 .custom-button.secondary {
   background: transparent;
   color: #a777e3;
@@ -69,7 +67,6 @@
   transform: translateY(0);
 }
 
-/* Variantes - Ghost (sutil, ideal para acompañar al Navbar sin sobrecargarlo visualmente) */
 .custom-button.ghost {
   background: transparent;
   color: #555;
