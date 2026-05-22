@@ -12,7 +12,7 @@ const NotFound = () => {
 
         <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Error 404</h1>
         <p style={{ fontSize: '1.2rem', color: '#555', marginBottom: '2rem' }}>
-          Parece que te perdiste, no existe esta página...
+          Parece que te perdiste, no existe esta página
         </p>
         <Button
           onClick={() => navigate('/')} size='large'
