@@ -1,0 +1,206 @@
+.bento-card {
+  background-color: var(--color-surface-lowest, #ffffff);
+  border-radius: var(--radius-default, 1rem);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px -5px rgba(11, 80, 213, 0.03);
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(11, 80, 213, 0.08);
+  border-color: rgba(11, 80, 213, 0.1);
+  background-color: var(--color-surface-low, #eef1f3);
+}
+
+/* Variación de columna */
+.bento-card.span-2 {
+  grid-column: span 2;
+}
+
+/* Fondo de BentoCard para layouts específicos */
+.bento-card.bg-low {
+  background-color: var(--color-surface-low, #eef1f3);
+}
+
+/* Efecto decorativo superior para tarjetas destacadas */
+.bento-card-bg-gradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(11, 80, 213, 0.08) 0%, transparent 70%);
+  border-bottom-left-radius: 100%;
+  pointer-events: none;
+  transition: transform 0.4s ease;
+}
+
+.bento-card:hover .bento-card-bg-gradient {
+  transform: scale(1.2);
+}
+
+/* Contenido Principal */
+.bento-card-header {
+  margin-bottom: 1.5rem;
+}
+
+/* Contenedor de Icono */
+.bento-card-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.bento-card-icon-wrapper.primary {
+  background-color: var(--color-primary, #0b50d5);
+  color: var(--color-on-primary, #f1f2ff);
+}
+
+.bento-card-icon-wrapper.secondary {
+  background-color: var(--color-secondary, #006b0a);
+  color: var(--color-on-primary, #ffffff);
+}
+
+.bento-card-icon-wrapper.tertiary {
+  background-color: var(--color-tertiary, #8c4a00);
+  color: var(--color-on-primary, #ffffff);
+}
+
+.bento-card-title {
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-on-surface, #2c2f31);
+  margin: 0 0 0.75rem 0;
+  line-height: 1.3;
+}
+
+.bento-card.span-2 .bento-card-title {
+  font-size: 1.5rem;
+}
+
+.bento-card-description {
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-on-surface-variant, #595c5e);
+  margin: 0;
+}
+
+/* Footer / Acciones */
+.bento-card-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.bento-card-link {
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary, #0b50d5);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.2s ease;
+}
+
+.bento-card-link:hover {
+  gap: 0.75rem;
+}
+
+/* Estilo para Enfermería (footer con borde superior) */
+.bento-card-status-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-outline-variant, rgba(171, 173, 175, 0.15));
+  width: 100%;
+}
+
+/* Layout Horizontal (ej. Talleres con imagen lateral) */
+.bento-card.horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+
+.bento-card-image-wrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: var(--radius-default, 1rem);
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.bento-card-image {
+  width: 100%;
+  height: 100%;
+  object-cover: cover;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover .bento-card-image {
+  transform: scale(1.08);
+}
+
+.bento-card-horizontal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+/* Botón de texto simple (Mindfulness) */
+.bento-card-btn-action {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-tertiary-dim, #7b4000);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  width: fit-content;
+  text-decoration: none;
+}
+
+.bento-card-btn-action:hover {
+  text-decoration: underline;
+}
+
+/* Adaptación responsiva para tarjetas horizontales */
+@media (max-width: 768px) {
+  .bento-card.span-2 {
+    grid-column: span 1;
+  }
+  
+  .bento-card.horizontal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .bento-card-image-wrapper {
+    width: 100%;
+    height: 180px;
+  }
+}

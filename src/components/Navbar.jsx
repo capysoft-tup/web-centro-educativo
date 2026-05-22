@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <nav className="custom-navbar">
       <div className="navbar-content">
-        <div className="navbar-logo" onClick={() => navigate('/')}>
+        <div className="navbar-logo" role="none" onClick={() => navigate('/')}>
           <img src={logo} alt="Logo" className="navbar-logo-icon" onError={(e) => e.target.style.display = 'none'} />
           <span>Educar para Transformar</span>
         </div>

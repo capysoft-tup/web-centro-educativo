@@ -1,0 +1,67 @@
+/* Variables del sistema de diseño para la sección de Bienestar (Wellness) */
+:root {
+  --color-primary: #0b50d5;
+  --color-primary-light: #7d9cff;
+  --color-primary-light-alpha: rgba(125, 156, 255, 0.15);
+  
+  --color-secondary: #006b0a;
+  --color-secondary-dim: #005d07;
+  --color-secondary-container: #59ee50;
+  --color-secondary-container-alpha: rgba(89, 238, 80, 0.15);
+  --color-on-secondary-container: #005406;
+  
+  --color-tertiary: #8c4a00;
+  --color-tertiary-dim: #7b4000;
+  --color-tertiary-container: #ff9734;
+  --color-tertiary-container-alpha: rgba(255, 151, 52, 0.15);
+  --color-on-tertiary-container: #4d2600;
+  
+  --color-surface: #f5f7f9;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #eef1f3;
+  --color-surface-high: #dfe3e6;
+  --color-surface-highest: #d9dde0;
+  
+  --color-on-surface: #2c2f31;
+  --color-on-surface-variant: #595c5e;
+  --color-outline-variant: rgba(171, 173, 175, 0.15);
+  
+  --radius-default: 1.5rem;
+  --radius-lg: 2.5rem;
+  --radius-full: 9999px;
+  
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Contenedor principal de la página Wellness */
+.wellness-page-container {
+  min-height: 100vh;
+  background-color: var(--color-surface, #f5f7f9);
+  color: var(--color-on-surface, #2c2f31);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+}
+
+.wellness-main-content {
+  flex-grow: 1;
+  padding-top: 7rem; /* Suficiente espacio para el navbar fijo */
+  padding-bottom: 5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Responsividad general */
+@media (max-width: 768px) {
+  .wellness-main-content {
+    padding-top: 6rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 4rem;
+  }
+}
