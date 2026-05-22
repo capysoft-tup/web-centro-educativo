@@ -1,16 +1,24 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import WellnessHero from '../components/organisms/WellnessHero';
+import ServicesBento from '../components/organisms/ServicesBento';
+import '../styles/Wellness.css';
 
 const Wellness = () => {
-    return (
-        <>
-            <Navbar />
-            <div style={{ padding: '2rem' }}>
-                <h1>Bienestar estudiantil</h1>
-                <p>En nuestro centro, el bienestar de los estudiantes es nuestra prioridad. Ofrecemos una variedad de programas y recursos para apoyar su desarrollo académico, emocional y social.</p>
-            </div>
-        </>
-    );
+  return (
+    <div className="wellness-page-container">
+      <Navbar />
+      <main className="wellness-main-content">
+        <WellnessHero 
+          onScheduleClick={() => alert('¡Redireccionando al sistema de turnos de Bienestar!')}
+          onEmergencyClick={() => alert('Llamando a la línea de emergencias médicas del campus: +54 362 4XXXXXX')}
+        />
+
+        <ServicesBento />
+      </main>
+    </div>
+  );
 };
 
-export default Wellness;    
+export default Wellness;
+
