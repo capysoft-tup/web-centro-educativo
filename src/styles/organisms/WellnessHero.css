@@ -1,0 +1,190 @@
+.wellness-hero {
+  background-color: var(--color-surface-lowest, #ffffff);
+  border-radius: var(--radius-lg, 2rem);
+  padding: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  box-shadow: 0 20px 40px -15px rgba(11, 80, 213, 0.06);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 5rem;
+}
+
+/* Elementos decorativos (Gradients difuminados) */
+.hero-decorator-1 {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 250px;
+  height: 250px;
+  background-color: var(--color-tertiary-container, #ff9734);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.hero-decorator-2 {
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  background-color: var(--color-secondary-container, #59ee50);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Columna de Texto */
+.wellness-hero-content {
+  flex: 1;
+  z-index: 2;
+  text-align: left;
+}
+
+.wellness-hero-title {
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-on-surface, #2c2f31);
+  margin: 1.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-tertiary-container) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.wellness-hero-description {
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-on-surface-variant, #595c5e);
+  margin-bottom: 2rem;
+}
+
+.wellness-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Botones con estilo Premium */
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: var(--color-on-primary, #ffffff);
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -10px rgba(11, 80, 213, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px -10px rgba(11, 80, 213, 0.5);
+}
+
+.hero-btn-primary:active {
+  transform: translateY(0);
+}
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-surface-high, #dfe3e6);
+  color: var(--color-on-surface, #2c2f31);
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-btn-secondary:hover {
+  background-color: var(--color-surface-highest, #d9dde0);
+  transform: translateY(-2px);
+}
+
+.hero-btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Columna de Imagen */
+.wellness-hero-image-container {
+  flex: 1;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wellness-hero-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: var(--radius-lg, 2rem);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease;
+}
+
+.wellness-hero-image:hover {
+  transform: scale(1.02);
+}
+
+/* Adaptación responsiva */
+@media (max-width: 992px) {
+  .wellness-hero {
+    flex-direction: column;
+    padding: 2.5rem;
+    gap: 2rem;
+  }
+  
+  .wellness-hero-content {
+    text-align: center;
+  }
+  
+  .wellness-hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .wellness-hero-actions {
+    justify-content: center;
+  }
+  
+  .wellness-hero-image-container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .wellness-hero-title {
+    font-size: 2.2rem;
+  }
+  
+  .wellness-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-btn-primary, .hero-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

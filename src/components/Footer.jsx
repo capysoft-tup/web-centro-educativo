@@ -13,10 +13,10 @@ const Footer = () => {
                     </p>
                 </div>
                 <div className="footer-links">
-                    <a href="#" className="footer-link">FACEBOOK</a>
-                    <a href="#" className="footer-link">INSTAGRAM</a>
-                    <a href="#" className="footer-link">WHATSAPP</a>
-                    <a href="#" className="footer-link">UBICACIÓN</a>
+                    <Link to="/" className="footer-link">FACEBOOK</Link>
+                    <Link to="/" className="footer-link">INSTAGRAM</Link>
+                    <Link to="/" className="footer-link">WHATSAPP</Link>
+                    <Link to="/" className="footer-link">UBICACIÓN</Link>
                     <Link to="/privacy" className="footer-link">PRIVACIDAD</Link>
                 </div>
             </div>
