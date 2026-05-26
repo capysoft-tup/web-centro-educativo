@@ -8,19 +8,16 @@ const NIVELES = [
     id: 'inicial',
     icon: '😊',
     nombre: 'Nivel Inicial',
-    descripcion: 'Para niños de 3 a 5 años. Un entorno lúdico y seguro.',
   },
   {
     id: 'primaria',
     icon: '📋',
     nombre: 'Primaria',
-    descripcion: 'De 1º a 6º grado. Bases sólidas para el futuro.',
   },
   {
     id: 'secundaria',
     icon: '🎓',
     nombre: 'Secundaria',
-    descripcion: 'Formación integral y preparación universitaria.',
   },
 ];
 
