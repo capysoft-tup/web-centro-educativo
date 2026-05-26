@@ -60,7 +60,16 @@ const Registration = () => {
   };
 
   const handleChange = (campo, valor) => {
-    setDatosFormulario({ ...datosFormulario, [campo]: valor });
+    let nuevoValor = valor;
+    
+    if (campo === 'dniTutor' || campo === 'dniAlumno') {
+      nuevoValor = valor.replace(/\D/g, ''); // Solo números
+    }
+    if (campo === 'telefono') {
+      nuevoValor = valor.replace(/[^0-9+\-\s]/g, ''); // Números, +, guiones y espacios
+    }
+
+    setDatosFormulario({ ...datosFormulario, [campo]: nuevoValor });
     if (errores[campo]) setErrores({ ...errores, [campo]: undefined });
   };
 
@@ -69,10 +78,27 @@ const Registration = () => {
     if (pasoActual === 1 && !datosFormulario.nivel)
       e.nivel = 'Selecciona un nivel para continuar.';
     if (pasoActual === 2) {
-      if (!datosFormulario.nombreTutor.trim()) e.nombreTutor = 'El campo es obligatorio';
-      if (!datosFormulario.dniTutor.trim()) e.dniTutor = 'El campo es obligatorio';
-      if (!datosFormulario.correo.trim()) e.correo = 'El campo es obligatorio';
-      if (!datosFormulario.telefono.trim()) e.telefono = 'El campo es obligatorio';
+      if (!datosFormulario.nombreTutor.trim()) {
+        e.nombreTutor = 'El campo es obligatorio';
+      }
+      
+      if (!datosFormulario.dniTutor.trim()) {
+        e.dniTutor = 'El campo es obligatorio';
+      } else if (datosFormulario.dniTutor.length < 7 || datosFormulario.dniTutor.length > 9) {
+        e.dniTutor = 'El DNI debe tener entre 7 y 9 números';
+      }
+
+      if (!datosFormulario.correo.trim()) {
+        e.correo = 'El campo es obligatorio';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datosFormulario.correo)) {
+        e.correo = 'Ingresa un correo electrónico válido';
+      }
+
+      if (!datosFormulario.telefono.trim()) {
+        e.telefono = 'El campo es obligatorio';
+      } else if (datosFormulario.telefono.replace(/\D/g, '').length < 8) {
+        e.telefono = 'Ingresa un número de teléfono válido';
+      }
     }
     if (pasoActual === 3) {
       if (!datosFormulario.nombreAlumno.trim()) e.nombreAlumno = 'El campo es obligatorio';
@@ -84,7 +110,11 @@ const Registration = () => {
         if (fecha < min || fecha > max)
           e.fechaNacimiento = 'La fecha no corresponde al nivel seleccionado.';
       }
-      if (!datosFormulario.dniAlumno.trim()) e.dniAlumno = 'El campo es obligatorio';
+      if (!datosFormulario.dniAlumno.trim()) {
+        e.dniAlumno = 'El campo es obligatorio';
+      } else if (datosFormulario.dniAlumno.length < 7 || datosFormulario.dniAlumno.length > 9) {
+        e.dniAlumno = 'El DNI debe tener entre 7 y 9 números';
+      }
     }
     setErrores(e);
     return Object.keys(e).length === 0;
