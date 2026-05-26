@@ -6,6 +6,7 @@ import EmploymentRequest from './pages/EmploymentRequest'
 import News from './pages/News'
 import Wellness from './pages/Wellness'
 import Levels from './pages/Levels'
+import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Gallery from './pages/Gallery';
 import Footer from './components/Footer';
@@ -22,6 +23,7 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/wellness" element={<Wellness />} />
         <Route path="/levels" element={<Levels />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
