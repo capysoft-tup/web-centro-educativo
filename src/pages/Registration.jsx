@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import '../styles/Registration.css';
 
 const NIVELES = [
@@ -77,7 +76,14 @@ const Registration = () => {
     }
     if (pasoActual === 3) {
       if (!datosFormulario.nombreAlumno.trim()) e.nombreAlumno = 'El campo es obligatorio';
-      if (!datosFormulario.fechaNacimiento) e.fechaNacimiento = 'El campo es obligatorio';
+      if (!datosFormulario.fechaNacimiento) {
+        e.fechaNacimiento = 'El campo es obligatorio';
+      } else {
+        const { min, max } = obtenerLimitesFecha();
+        const fecha = datosFormulario.fechaNacimiento;
+        if (fecha < min || fecha > max)
+          e.fechaNacimiento = 'La fecha no corresponde al nivel seleccionado.';
+      }
       if (!datosFormulario.dniAlumno.trim()) e.dniAlumno = 'El campo es obligatorio';
     }
     setErrores(e);
@@ -294,7 +300,6 @@ const Registration = () => {
 
         </div>
       </main>
-      <Footer />
     </>
   );
 };
