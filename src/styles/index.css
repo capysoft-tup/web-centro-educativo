@@ -12,9 +12,13 @@ body {
   flex-direction: column;
   box-sizing: border-box;
   color: rgb(2, 1, 1);
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Plus Jakarta Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Plus Jakarta Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+}
+
+* {
+  font-family: 'Plus Jakarta Sans', var(--sans), sans-serif;
 }
 
 h1,

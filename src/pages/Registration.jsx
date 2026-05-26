@@ -227,7 +227,6 @@ const Registration = () => {
 
         </div>
       </main>
-      <Footer />
     </>
   );
 };
