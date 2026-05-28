@@ -47,7 +47,7 @@ const Navbar = () => {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2.5 px-4.5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full font-label font-bold text-sm shadow-md hover:from-orange-600 hover:to-amber-600 transition-all duration-200 cursor-pointer focus:outline-none"
+                className="flex pl-3 pr-3 items-center gap-2.5 px-4.5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full font-label font-bold text-sm shadow-md hover:from-orange-600 hover:to-amber-600 transition-all duration-200 cursor-pointer focus:outline-none"
               >
                 <span className="material-symbols-outlined text-lg flex items-center justify-center" style={{ fontVariationSettings: "'FILL' 1" }}>
                   account_circle
