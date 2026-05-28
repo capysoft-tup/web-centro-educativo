@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════════
-   Registration.css  –  Formulario de inscripción
-   ═══════════════════════════════════════════ */
-
-/* ── Layout principal ── */
 .registro-main {
   flex: 1;
   display: flex;
@@ -13,7 +8,7 @@
   min-height: calc(100svh - 64px);
 }
 
-/* ── Hero ── */
+
 .registro-hero {
   text-align: center;
   max-width: 640px;
@@ -39,7 +34,7 @@
   margin: 0;
 }
 
-/* ── Stepper ── */
+
 .stepper {
   display: flex;
   align-items: center;
@@ -234,6 +229,32 @@
 .form-textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+/* ── Validación de errores ── */
+.form-input--error {
+  border-color: #ef4444;
+  background: #fff5f5;
+}
+
+.form-input--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.form-error {
+  font-size: 0.78rem;
+  color: #ef4444;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.form-error::before {
+  content: '⚠';
+  font-size: 0.7rem;
 }
 
 /* ── Botones de navegación ── */
