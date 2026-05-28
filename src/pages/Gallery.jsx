@@ -77,7 +77,7 @@ const Gallery = () => {
       <Navbar />
       
       {/* Main Content */}
-      <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+      <main className="pt-10 pb-24 px-6 max-w-7xl mx-auto">
         {/* Gallery Hero Component (Organism) */}
         <GalleryHero />
 

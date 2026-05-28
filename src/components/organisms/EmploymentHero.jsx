@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from '../atoms/Icon';
+import employment from '../../assets/employment.png';
 
 /**
  * Componente EmploymentHero (Organismo)
@@ -49,7 +50,7 @@ const EmploymentHero = ({ onVerVacantesClick, onCargarCvClick }) => {
         <img 
           alt="Profesores colaborando alegremente" 
           className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF3iiRrxjzym2fS_oYdyQPyVLK8cx_unyckSbcVgHfWTxLnaA7HJNsOtlVXPLWYmJshs1tEzQ0TI4xmviHVZPxuEm8g98X0MRLP3sNDEP52xNqhmTI0txPA4btcI2wf3Kzg8IMYahqQXgZ02XSThPZnlwBDxE4pfpGKE26jJYLKDE2n91unXnNaANSEAXpPlpY-t2wxIYvUaqmtwHSELReNtAuF1NiJLduGviQnwlTA1ZZn1i17xPM5FnjnO8dLrqrV6lP60Rz3tQ"
+          src={employment}
         />
       </div>
     </section>
