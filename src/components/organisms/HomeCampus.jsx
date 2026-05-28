@@ -1,0 +1,93 @@
+import React from 'react';
+import pool from '../../assets/pool.png';
+import stadium from '../../assets/stadium.png';
+import lab from '../../assets/lab.jpg';
+import Icon from '../atoms/Icon';
+
+/**
+ * Componente HomeCampus (Organismo)
+ * Sección que presenta el campus escolar con sus instalaciones, usando imágenes locales.
+ * 
+ * @param {Function} onGalleryClick - Callback para navegar a la Galería Completa.
+ */
+const HomeCampus = ({ onGalleryClick }) => {
+  return (
+    <section className="bg-surface-container-low relative text-left" id="gallery">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Cabecera de la Sección */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 animate-in fade-in duration-500">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-on-surface font-headline mb-4">
+              Nuestro Campus
+            </h2>
+            <p className="text-lg text-on-surface-variant font-body">
+              Espacios diseñados para el bienestar físico, mental y académico.
+            </p>
+          </div>
+          <button 
+            onClick={() => alert('¡El Tour Virtual 360° del campus estará disponible próximamente!')}
+            className="flex bg-secondary-container text-on-secondary-container font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all items-center gap-2 cursor-pointer"
+          >
+            <span>Ver Tour Virtual</span>
+            <Icon name="visibility" className="text-lg flex items-center" />
+          </button>
+        </div>
+        
+        {/* Grilla Bento del Campus con Assets Locales */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px] animate-in fade-in slide-in-from-bottom-6 duration-700">
+          
+          {/* 1. Complejo Acuático (Piscina) - col-span-2, row-span-2 */}
+          <div className="md:col-span-2 md:row-span-2 rounded-[2rem] overflow-hidden relative group shadow-sm cursor-pointer">
+            <img 
+              alt="Piscina olímpica techada del colegio" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              src={pool}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+              <h3 className="text-white font-headline text-2xl font-bold">Complejo Acuático</h3>
+            </div>
+          </div>
+          
+          {/* 2. Campos Deportivos (Cancha) - col-span-2, row-span-1 */}
+          <div className="md:col-span-2 rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
+            <img 
+              alt="Campos deportivos del colegio" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              src={stadium}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+              <h3 className="text-white font-headline text-xl font-bold">Campos Deportivos</h3>
+            </div>
+          </div>
+          
+          {/* 3. Laboratorios STEAM (Laboratorio) - col-span-1, row-span-1 */}
+          <div className="rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
+            <img 
+              alt="Laboratorio de ciencias STEAM" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              src={lab}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+              <h3 className="text-white font-headline text-lg font-bold">Laboratorios STEAM</h3>
+            </div>
+          </div>
+          
+          {/* 4. Botón Tarjeta "Galería Completa" - col-span-1, row-span-1 */}
+          <div 
+            onClick={onGalleryClick}
+            className="rounded-[1.5rem] overflow-hidden relative group bg-tertiary-container flex flex-col items-center justify-center text-center p-6 text-on-tertiary-container hover:bg-tertiary-fixed transition-all duration-300 cursor-pointer shadow-sm border border-tertiary-container/10 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Icon name="photo_library" className="text-4xl mb-2 text-tertiary" />
+            <h3 className="font-headline font-bold text-lg">Galería Completa</h3>
+            <p className="text-tertiary-dim text-sm mt-1">Ver más fotos</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default HomeCampus;
