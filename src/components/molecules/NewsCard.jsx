@@ -43,7 +43,7 @@ const NewsCard = ({
           <img 
             alt={title} 
             src={image} 
-            className="absolute inset-0 w-full h-full object-cover opacity-90 rounded-xl z-0 transition-transform duration-700 group-hover:scale-[1.03]"
+            className="absolute inset-0 w-full h-full object-cover opacity-50 rounded-xl z-0 transition-transform duration-700 group-hover:scale-[1.03]"
           />
         )}
 
