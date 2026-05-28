@@ -111,7 +111,7 @@ const EmploymentRequest = () => {
             <Navbar />
 
             {/* Main Content */}
-            <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto flex flex-col gap-16">
+            <main className="pt-10 pb-24 px-6 max-w-7xl mx-auto flex flex-col gap-16">
                 
                 {/* Hero Section (Organism) */}
                 <EmploymentHero 
