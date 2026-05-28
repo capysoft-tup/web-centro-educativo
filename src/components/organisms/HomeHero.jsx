@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from '../atoms/Icon';
 import escuela from '../../assets/escuela.jpg';
 import logo from '../../assets/logo.png';
+import Badge from '../atoms/Badge';
 
 /**
  * Componente HomeHero (Organismo)
@@ -17,7 +18,7 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
       <div className="absolute inset-0 z-0">
         <img
           alt="Campus"
-          className="w-full h-full object-cover opacity-45 mix-blend-multiply"
+          className="w-full h-full object-cover opacity-15 mix-blend-multiply"
           src={escuela}
         />
         <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
@@ -28,12 +29,7 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
         {/* Contenido Izquierdo */}
         <div className="flex flex-col gap-6 text-left animate-in fade-in duration-500">
           <span className="text-tertiary font-extrabold uppercase tracking-wider text-sm flex items-center gap-2 select-none">
-            <Icon
-              name="stars"
-              filled={true}
-              className="text-tertiary-fixed text-lg flex items-center justify-center animate-spin-slow"
-            />
-            Excelencia asegurada
+            <Badge text="Excelencia asegurada" variant="tertiary" animated={true} className="text-3xl" />
           </span>
 
           <h1 className="text-5xl md:text-7xl font-extrabold text-on-surface leading-tight font-headline">
