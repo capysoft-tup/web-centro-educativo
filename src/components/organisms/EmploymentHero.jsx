@@ -1,5 +1,7 @@
 import React from 'react';
 import Icon from '../atoms/Icon';
+
+// Importar recurso local
 import employment from '../../assets/employment.png';
 
 /**

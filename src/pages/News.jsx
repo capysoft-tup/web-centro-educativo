@@ -4,11 +4,13 @@ import Icon from '../components/atoms/Icon';
 import NewsCard from '../components/molecules/NewsCard';
 import EventCard from '../components/molecules/EventCard';
 import NewsHero from '../components/organisms/NewsHero';
+
+// Importar recursos gráficos locales
 import feria from '../assets/feria.jpeg';
 import lectura from '../assets/lectura.jpg';
 import basket from '../assets/basket.jpg';
-import pool from '../assets/pool.png';
 import robotica from '../assets/robotica.webp';
+import pool from '../assets/pool.png';
 
 const News = () => {
   // Mock event list data
@@ -45,7 +47,7 @@ const News = () => {
     }
   ];
 
-  // Featured large article data
+  // Featured large article data with local asset
   const featuredArticle = {
     id: 'featured-1',
     title: 'Feria de Ciencias 2024: Innovación Estudiantil',
@@ -56,7 +58,7 @@ const News = () => {
     buttonText: 'Leer más'
   };
 
-  // Pre-loaded secondary news items
+  // Pre-loaded secondary news items with local assets
   const initialSecondaryArticles = [
     {
       id: 'secondary-1',
@@ -83,7 +85,7 @@ const News = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // Lazy load simulator for "Cargar más"
+  // Lazy load simulator for "Cargar más" using local assets
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     
