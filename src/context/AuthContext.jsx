@@ -5,8 +5,14 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('school_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('school_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error('Error leyendo datos de sesión del localStorage:', error);
+      localStorage.removeItem('school_user');
+      return null;
+    }
   });
 
   const login = (username, role) => {
