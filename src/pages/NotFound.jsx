@@ -2,11 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import image404 from '../assets/404.png';
 import Button from '../components/Button';
+import Navbar from '../components/Navbar';
 
 const NotFound = () => {
   const navigate = useNavigate()
   return (
     <>
+      <Navbar />
       <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
         <img src={image404} alt="404" style={{ maxWidth: '600px', marginBottom: '20px' }} />
 

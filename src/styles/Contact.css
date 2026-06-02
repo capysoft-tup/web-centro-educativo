@@ -11,7 +11,7 @@
 
 .contact-main-content {
   flex-grow: 1;
-  padding-top: 7.5rem; /* Separación del navbar fijo */
+  padding-top: 3rem; /* Separación del navbar fijo */
   padding-bottom: 6rem;
   padding-left: 2rem;
   padding-right: 2rem;

@@ -45,7 +45,7 @@
 
 .wellness-main-content {
   flex-grow: 1;
-  padding-top: 7rem; /* Suficiente espacio para el navbar fijo */
+  padding-top: 2rem; /* Suficiente espacio para el navbar fijo */
   padding-bottom: 5rem;
   padding-left: 2rem;
   padding-right: 2rem;
