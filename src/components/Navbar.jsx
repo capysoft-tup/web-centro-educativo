@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
 import Button from './Button';
 import logo from '../assets/logo.png';
@@ -27,10 +27,10 @@ const Navbar = () => {
   return (
     <nav className="custom-navbar">
       <div className="navbar-content">
-        <div className="navbar-logo" role="none" onClick={() => navigate('/')}>
-          <img src={logo} alt="Logo" className="navbar-logo-icon" onError={(e) => e.target.style.display = 'none'} />
+        <Link to="/" className="navbar-logo" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <img src={logo} alt="Logo Educar para Transformar" className="navbar-logo-icon" onError={(e) => e.target.style.display = 'none'} />
           <span>Educar para Transformar</span>
-        </div>
+        </Link>
 
         <div className="navbar-links">
           <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inicio</NavLink>

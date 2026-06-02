@@ -46,7 +46,7 @@ const Registration = () => {
     if (validarPaso()) setPasoActual(pasoActual + 1);
   };
 
-  const handleSubmmit = () => {
+  const handleSubmit = () => {
     if (!validarPaso()) return;
     setIsSubmitting(true);
     setTimeout(() => {
@@ -320,7 +320,7 @@ const Registration = () => {
               <button
                 type="button"
                 className="btn-finalizar"
-                onClick={handleSubmmit}
+                onClick={handleSubmit}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Enviando...' : 'Finalizar Inscripción ✓'}
