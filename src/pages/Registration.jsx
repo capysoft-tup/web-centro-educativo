@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import '../styles/Registration.css';
 
@@ -26,6 +27,7 @@ const NIVELES = [
 const PASOS = ['Nivel', 'Tutor', 'Alumno'];
 
 const Registration = () => {
+  const navigate = useNavigate();
   const [pasoActual, setPasoActual] = useState(1);
 
   const [datosFormulario, setDatosFormulario] = useState({
@@ -51,7 +53,7 @@ const Registration = () => {
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      alert('¡Inscripción enviada con éxito!');
+      navigate('/success');
     }, 1500);
   };
 
