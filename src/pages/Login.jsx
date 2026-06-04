@@ -5,6 +5,12 @@ import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 
 const ROLES_INFO = {
+  Administrador: {
+    label: 'Administrador',
+    icon: 'admin_panel_settings',
+    displayLabel: 'ADMINISTRADOR',
+    permissions: ['gestionar_usuarios', 'ver_auditorias', 'configurar_sistema']
+  },
   Staff: {
     label: 'Staff',
     icon: 'badge',
@@ -35,8 +41,19 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const dropdownRef = useRef(null);
+
+  // Redirigir administradores y personal automáticamente
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      if (user.role === 'user_admin' || user.role === 'Staff' || user.role === 'Administrativo') {
+        navigate('/admin');
+      }
+    }
+  }, [isLoggedIn, user, navigate]);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -51,10 +68,18 @@ const Login = () => {
     };
   }, []);
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    // Use AuthContext to log in globally
-    login(identifier || selectedRole, selectedRole);
+    setIsSubmitting(true);
+    setLoginError('');
+    try {
+      await login(identifier, password, selectedRole);
+    } catch (err) {
+      console.error(err);
+      setLoginError(err.message || 'Error al iniciar sesión. Revisa tus credenciales.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleLogout = () => {
@@ -338,12 +363,18 @@ const Login = () => {
 
               {/* Submit Button */}
               <button
-                className="w-full flex justify-center items-center py-4 px-6 border border-transparent rounded-full shadow-md text-base font-bold font-label text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 transition-all active:scale-95 cursor-pointer"
+                className="w-full flex justify-center items-center py-4 px-6 border border-transparent rounded-full shadow-md text-base font-bold font-label text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 transition-all active:scale-95 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
                 type="submit"
+                disabled={isSubmitting}
               >
-                Acceso Seguro
+                {isSubmitting ? 'Verificando...' : 'Acceso Seguro'}
                 <span className="material-symbols-outlined ml-2">arrow_forward</span>
               </button>
+              {loginError && (
+                <p className="text-red-500 text-sm font-bold text-center mt-4 bg-red-50 p-2.5 rounded-xl border border-red-200">
+                  {loginError}
+                </p>
+              )}
             </form>
 
             {/* Help Link */}
