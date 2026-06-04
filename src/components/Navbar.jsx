@@ -8,6 +8,12 @@ import { useAuth } from '../context/AuthContext';
 const Navbar = ({ noButtons = false }) => {
   const navigate = useNavigate();
   const { user, logout, isLoggedIn } = useAuth();
+  const displayName =
+    user?.nombre ||
+    user?.name ||
+    user?.username ||
+    user?.email?.split('@')[0] ||
+    'Usuario';
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
@@ -41,64 +47,64 @@ const Navbar = ({ noButtons = false }) => {
           <span>Educar para Transformar</span>
         </Link>
         {!noButtons && (
-        <div className="navbar-links">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Inicio
-          </NavLink>
-          <NavLink
-            to="/wellness"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Bienestar
-          </NavLink>
-          <NavLink
-            to="/news"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Noticias
-          </NavLink>
-          <NavLink
-            to="/gallery"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Galería
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Contacto
-          </NavLink>
-          <NavLink
-            to="/register"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Inscripciones
-          </NavLink>
-          <NavLink
-            to="/employment-request"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            Empleo
-          </NavLink>
-        </div> 
+          <div className="navbar-links">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Inicio
+            </NavLink>
+            <NavLink
+              to="/wellness"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Bienestar
+            </NavLink>
+            <NavLink
+              to="/news"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Noticias
+            </NavLink>
+            <NavLink
+              to="/gallery"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Galería
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Contacto
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Inscripciones
+            </NavLink>
+            <NavLink
+              to="/employment-request"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Empleo
+            </NavLink>
+          </div>
         )}
         <div className="navbar-actions">
           {isLoggedIn && user ? (
@@ -106,6 +112,7 @@ const Navbar = ({ noButtons = false }) => {
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className="flex pl-3 pr-3 items-center gap-2.5 px-4.5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full font-label font-bold text-sm shadow-md hover:from-orange-600 hover:to-amber-600 transition-all duration-200 cursor-pointer focus:outline-none"
+                data-testid="user-menu-button"
               >
                 <span
                   className="material-symbols-outlined text-lg flex items-center justify-center"
@@ -113,7 +120,7 @@ const Navbar = ({ noButtons = false }) => {
                 >
                   account_circle
                 </span>
-                <span>Hola, {user.username}</span>
+                <span>Hola, {displayName}</span>
                 <span
                   className="material-symbols-outlined text-sm flex items-center justify-center transition-transform duration-200"
                   style={{
