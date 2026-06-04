@@ -173,7 +173,7 @@ const AdminPanel = () => {
         throw new Error(errData.error || 'Error en la petición.');
       }
 
-      const result = await response.json();
+      await response.json();
 
       setSuccessModalData({
         title: '¡Tutor y Alumnos Creados!',
@@ -232,7 +232,7 @@ const AdminPanel = () => {
         throw new Error(errData.error || 'Error en la petición.');
       }
 
-      const result = await response.json();
+      await response.json();
 
       setSuccessModalData({
         title: '¡Usuario Creado!',
