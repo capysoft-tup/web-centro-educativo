@@ -9,7 +9,6 @@ import Levels from './pages/Levels'
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Gallery from './pages/Gallery';
-import SuccessRegistration from './pages/SuccessRegistration';
 import Footer from './components/Footer';
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
         <Route path="/wellness" element={<Wellness />} />
         <Route path="/levels" element={<Levels />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/success" element={<SuccessRegistration />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
