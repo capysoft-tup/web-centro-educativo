@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import Icon from '../atoms/Icon';
+import '../../styles/organisms/ChangePasswordModal.css';
 
 const ChangePasswordModal = () => {
   const { user, changePassword, logout } = useAuth();
@@ -42,86 +43,84 @@ const ChangePasswordModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden p-8 text-center animate-scale-in">
+    <div className="change-password-overlay">
+      <div className="change-password-modal">
         
         {/* Header Icon */}
-        <div className="flex justify-center mb-6">
-          <div className={`h-16 w-16 rounded-full flex items-center justify-center ${
-            success ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'
-          }`}>
+        <div className="modal-icon-container">
+          <div className={`modal-icon-circle ${success ? 'success' : 'pending'}`}>
             <Icon name={success ? 'check_circle' : 'lock_reset'} className="text-3xl" />
           </div>
         </div>
 
         {success ? (
-          <div className="space-y-6">
-            <h2 className="font-headline text-2xl font-bold text-slate-800">¡Contraseña Actualizada!</h2>
-            <p className="font-body text-slate-500 text-sm">
+          <div className="modal-content-container">
+            <h2 className="modal-title">¡Contraseña Actualizada!</h2>
+            <p className="modal-description">
               Tu contraseña ha sido actualizada con éxito. Ya puedes comenzar a utilizar la plataforma con tus nuevas credenciales.
             </p>
-            <div className="pt-2">
+            <div className="modal-actions-group">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-full transition-all cursor-pointer shadow-md border-none"
+                className="btn-modal-success"
               >
                 Comenzar
               </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6 text-left">
-            <div className="text-center space-y-2">
-              <h2 className="font-headline text-2xl font-bold text-slate-800">Actualizar Contraseña</h2>
-              <p className="font-body text-slate-500 text-sm">
+          <form onSubmit={handleSubmit} className="modal-form">
+            <div className="form-header-group">
+              <h2 className="modal-title">Actualizar Contraseña</h2>
+              <p className="modal-description">
                 Has iniciado sesión con tu contraseña temporal (DNI). Por motivos de seguridad, debes establecer una nueva contraseña para continuar.
               </p>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nueva Contraseña</label>
+            <div className="form-inputs-group">
+              <div className="input-field-group">
+                <label className="input-label">Nueva Contraseña</label>
                 <input
                   type="password"
                   placeholder="Mínimo 6 caracteres"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                  className="modal-input"
                   required
                 />
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Confirmar Contraseña</label>
+              <div className="input-field-group">
+                <label className="input-label">Confirmar Contraseña</label>
                 <input
                   type="password"
                   placeholder="Repite la contraseña"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                  className="modal-input"
                   required
                 />
               </div>
             </div>
 
             {error && (
-              <p className="text-xs text-red-500 font-semibold bg-red-50 border border-red-100 p-3 rounded-xl text-center">
+              <p className="modal-error-message">
                 {error}
               </p>
             )}
 
-            <div className="flex flex-col gap-2 pt-2">
+            <div className="modal-actions-group">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm rounded-full shadow-lg shadow-orange-600/10 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed border-none"
+                className="btn-modal-primary"
               >
                 {isSubmitting ? 'Guardando...' : 'Cambiar Contraseña'}
               </button>
               <button
                 type="button"
                 onClick={() => logout()}
-                className="w-full py-3 bg-transparent hover:bg-slate-50 text-slate-500 hover:text-slate-800 font-bold text-xs rounded-full transition-all cursor-pointer border-none"
+                className="btn-modal-secondary"
               >
                 Cerrar Sesión
               </button>
