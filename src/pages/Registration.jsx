@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import SuccessModal from '../components/molecules/SuccessModal';
 import '../styles/Registration.css';
 
 const NIVELES = [
@@ -26,7 +28,9 @@ const NIVELES = [
 const PASOS = ['Nivel', 'Tutor', 'Alumno'];
 
 const Registration = () => {
+  const navigate = useNavigate();
   const [pasoActual, setPasoActual] = useState(1);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [datosFormulario, setDatosFormulario] = useState({
     nivel: '',
@@ -51,7 +55,7 @@ const Registration = () => {
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      alert('¡Inscripción enviada con éxito!');
+      setShowSuccessModal(true);
     }, 1500);
   };
 
@@ -330,6 +334,15 @@ const Registration = () => {
 
         </div>
       </main>
+      <SuccessModal 
+        isOpen={showSuccessModal}
+        onClose={() => navigate('/')}
+        title="¡Inscripción Exitosa!"
+        message="Hemos recibido tus datos correctamente. Nos pondremos en contacto contigo a la brevedad para continuar con el proceso."
+        buttonText="Volver al inicio"
+        iconBg="bg-green-100"
+        iconColor="text-green-600"
+      />
     </>
   );
 };

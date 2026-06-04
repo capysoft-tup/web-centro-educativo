@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import Icon from '../components/atoms/Icon';
 import FileUploadZone from '../components/molecules/FileUploadZone';
+import SuccessModal from '../components/molecules/SuccessModal';
 import EmploymentHero from '../components/organisms/EmploymentHero';
 import EmploymentBento from '../components/organisms/EmploymentBento';
 
@@ -252,30 +253,15 @@ const EmploymentRequest = () => {
             </main>
 
             {/* Success Modal / Banner */}
-            {submitSuccess && (
-                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-50 flex items-center justify-center p-6 animate-in fade-in duration-300">
-                    <div className="bg-white/95 dark:bg-slate-900/95 max-w-md w-full rounded-[2.5rem] p-8 border border-white/20 shadow-2xl flex flex-col items-center text-center gap-6 animate-in zoom-in-95 duration-300">
-                        
-                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 scale-100 animate-bounce">
-                            <Icon name="check_circle" filled={true} className="text-4xl" />
-                        </div>
-                        
-                        <div className="flex flex-col gap-2">
-                            <h3 className="font-headline text-2xl font-bold text-slate-800 dark:text-slate-100">¡Postulación Enviada!</h3>
-                            <p className="font-body text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Hemos recibido tus datos y tu currículum correctamente. Nuestro equipo de selección lo revisará y nos pondremos en contacto contigo si tu perfil se adapta a alguna de nuestras vacantes.
-                            </p>
-                        </div>
-                        
-                        <button 
-                            onClick={() => setSubmitSuccess(false)}
-                            className="bg-gradient-to-br from-green-500 to-emerald-600 text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-green-500/20 hover:scale-[1.03] active:scale-[0.97] transition-all cursor-pointer w-full"
-                        >
-                            Entendido
-                        </button>
-                    </div>
-                </div>
-            )}
+            <SuccessModal 
+                isOpen={submitSuccess}
+                onClose={() => setSubmitSuccess(false)}
+                title="¡Postulación Enviada!"
+                message="Hemos recibido tus datos y tu currículum correctamente. Nuestro equipo de selección lo revisará y nos pondremos en contacto contigo si tu perfil se adapta a alguna de nuestras vacantes."
+                buttonText="Entendido"
+                iconBg="bg-green-100"
+                iconColor="text-green-600"
+            />
         </div>
     );
 };
