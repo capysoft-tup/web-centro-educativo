@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cf_createAdministrativeUser = exports.cf_resetStudentPassword = exports.cf_loginStudent = exports.cf_activateStudentAccount = exports.cf_updateParentEmailAndResend = exports.cf_resendActivationLink = exports.cf_createParentAndStudents = void 0;
+exports.cf_completePasswordChange = exports.cf_updateUserProfile = exports.cf_changeStudentPassword = exports.cf_resetUserPasswordToDni = exports.cf_createAdministrativeUser = exports.cf_resetStudentPassword = exports.cf_loginStudent = exports.cf_activateStudentAccount = exports.cf_updateParentEmailAndResend = exports.cf_resendActivationLink = exports.cf_createParentAndStudents = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 const crypto = __importStar(require("crypto"));
@@ -83,7 +83,7 @@ async function generateUniqueStudentIdLogin() {
  * 1. cf_createParentAndStudents
  * Invocada por un user_admin para crear un padre y sus hijos.
  */
-exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         // Validar autorización
         const callerClaims = await verifyAuth(req);
@@ -91,15 +91,16 @@ exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true }, asyn
             res.status(403).send({ error: 'Permisos insuficientes: Requiere rol user_admin.' });
             return;
         }
-        const { parentEmail, parentName, students } = req.body;
-        if (!parentEmail || !students || !Array.isArray(students)) {
-            res.status(400).send({ error: 'Faltan parámetros requeridos (parentEmail, students).' });
+        const { parentEmail, parentName, parentDni, students } = req.body;
+        if (!parentEmail || !parentDni || !parentName || !students || !Array.isArray(students)) {
+            res.status(400).send({ error: 'Faltan parámetros requeridos (parentEmail, parentDni, parentName, students).' });
             return;
         }
-        // Crear usuario del Padre en Auth
+        // Crear usuario del Padre en Auth usando su DNI como contraseña inicial
         const parentUser = await admin.auth().createUser({
             email: parentEmail,
-            emailVerified: false,
+            emailVerified: true,
+            password: parentDni.trim()
         });
         // Establecer Custom Claim para el Padre
         await admin.auth().setCustomUserClaims(parentUser.uid, { role: 'Padre' });
@@ -107,21 +108,25 @@ exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true }, asyn
         const createdStudentsInfo = [];
         // Procesar cada estudiante
         for (const student of students) {
+            if (!student.nombre || !student.dni) {
+                continue;
+            }
             const studentID_login = await generateUniqueStudentIdLogin();
-            const activationToken = crypto.randomBytes(32).toString('hex');
-            const activationTokenExpires = admin.firestore.Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000) // 48 Horas
-            );
+            // Hashear el DNI del alumno como su contraseña por defecto
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(student.dni.trim(), salt);
             const studentRef = await db.collection('students').add({
                 studentID_login,
                 parentId: parentUser.uid,
                 emailPadre: parentEmail,
-                hashedPassword: null,
-                status: 'pendingParentActivation',
-                activationToken,
-                activationTokenExpires,
+                hashedPassword,
+                status: 'active',
+                mustChangePassword: true,
                 nombre: student.nombre || '',
                 dni: student.dni || '',
+                genero: student.genero || '',
                 fechaNacimiento: student.fechaNacimiento || '',
+                nivel: student.nivel || 'inicial',
                 createdAt: admin.firestore.FieldValue.serverTimestamp()
             });
             studentDocIds.push(studentRef.id);
@@ -136,44 +141,14 @@ exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true }, asyn
             role: 'Padre',
             email: parentEmail,
             nombre: parentName || '',
+            dni: parentDni.trim(),
+            mustChangePassword: true,
             emailInvalid: false,
             studentIds: studentDocIds,
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         });
-        // Generar enlace de verificación de email para el Padre
-        const redirectUrl = process.env.REDIRECT_URL || 'http://localhost:5173/auth-action';
-        const actionCodeSettings = {
-            url: redirectUrl,
-            handleCodeInApp: true
-        };
-        let emailSentSuccessfully = true;
-        let emailLink = '';
-        try {
-            emailLink = await admin.auth().generateEmailVerificationLink(parentEmail, actionCodeSettings);
-            // Enviar email
-            const htmlContent = `
-        <h1>Bienvenido a Educar para Transformar</h1>
-        <p>Hola ${parentName || 'Tutor'},</p>
-        <p>Un administrador de la institución ha iniciado su registro. Para activar su cuenta de tutor y verificar su correo, haga clic en el siguiente enlace:</p>
-        <p><a href="${emailLink}">Verificar y Activar Cuenta</a></p>
-        <p>Este enlace expirará pronto. Una vez verificado, podrá ayudar a sus hijos a activar sus cuentas.</p>
-      `;
-            await (0, email_1.sendEmail)({
-                to: parentEmail,
-                subject: 'Activación de Cuenta de Tutor - Educar para Transformar',
-                html: htmlContent
-            });
-        }
-        catch (mailError) {
-            console.error('Error al enviar email de activación al Padre:', mailError);
-            emailSentSuccessfully = false;
-            // Actualizar a emailInvalid: true
-            await db.collection('users').doc(parentUser.uid).update({ emailInvalid: true });
-        }
         res.status(201).send({
             parentUid: parentUser.uid,
-            emailSentSuccessfully,
-            emailLink: emailSentSuccessfully ? undefined : emailLink, // Retornar el link si falló el correo para que el admin pueda copiarlo
             students: createdStudentsInfo
         });
     }
@@ -186,7 +161,7 @@ exports.cf_createParentAndStudents = (0, https_1.onRequest)({ cors: true }, asyn
  * 2. cf_resendActivationLink
  * Reenvía enlace de activación (de padre o de estudiante).
  */
-exports.cf_resendActivationLink = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_resendActivationLink = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const callerClaims = await verifyAuth(req);
         const { targetType, targetId } = req.body;
@@ -277,7 +252,7 @@ exports.cf_resendActivationLink = (0, https_1.onRequest)({ cors: true }, async (
  * 3. cf_updateParentEmailAndResend
  * Invocada por un administrador para corregir el correo electrónico de un padre y volver a enviar la activación.
  */
-exports.cf_updateParentEmailAndResend = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_updateParentEmailAndResend = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const callerClaims = await verifyAuth(req);
         if (callerClaims.role !== 'user_admin') {
@@ -339,7 +314,7 @@ exports.cf_updateParentEmailAndResend = (0, https_1.onRequest)({ cors: true }, a
  * 4. cf_activateStudentAccount
  * Invocada desde el frontend de React para que un estudiante establezca su contraseña. Public API.
  */
-exports.cf_activateStudentAccount = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_activateStudentAccount = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const { studentId, token, newPassword } = req.body;
         if (!studentId || !token || !newPassword) {
@@ -384,7 +359,7 @@ exports.cf_activateStudentAccount = (0, https_1.onRequest)({ cors: true }, async
  * 5. cf_loginStudent
  * Permite a un estudiante iniciar sesión con su studentID_login y contraseña. Public API.
  */
-exports.cf_loginStudent = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_loginStudent = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const { studentID_login, password } = req.body;
         if (!studentID_login || !password) {
@@ -429,7 +404,7 @@ exports.cf_loginStudent = (0, https_1.onRequest)({ cors: true }, async (req, res
  * 6. cf_resetStudentPassword
  * Envía un enlace de restablecimiento de contraseña para un estudiante al correo del padre.
  */
-exports.cf_resetStudentPassword = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_resetStudentPassword = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const callerClaims = await verifyAuth(req);
         const { studentId } = req.body;
@@ -482,16 +457,16 @@ exports.cf_resetStudentPassword = (0, https_1.onRequest)({ cors: true }, async (
  * 7. cf_createAdministrativeUser
  * Invocada por un user_admin para crear otro administrador, staff (docente) o administrativo.
  */
-exports.cf_createAdministrativeUser = (0, https_1.onRequest)({ cors: true }, async (req, res) => {
+exports.cf_createAdministrativeUser = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
     try {
         const callerClaims = await verifyAuth(req);
         if (callerClaims.role !== 'user_admin') {
             res.status(403).send({ error: 'Permisos insuficientes: Requiere rol user_admin.' });
             return;
         }
-        const { email, name, role } = req.body;
-        if (!email || !name || !role) {
-            res.status(400).send({ error: 'Faltan parámetros requeridos (email, name, role).' });
+        const { email, name, role, dni } = req.body;
+        if (!email || !name || !role || !dni) {
+            res.status(400).send({ error: 'Faltan parámetros requeridos (email, name, role, dni).' });
             return;
         }
         const allowedRoles = ['user_admin', 'Staff', 'Administrativo'];
@@ -499,10 +474,11 @@ exports.cf_createAdministrativeUser = (0, https_1.onRequest)({ cors: true }, asy
             res.status(400).send({ error: 'Rol inválido. Debe ser user_admin, Staff o Administrativo.' });
             return;
         }
-        // Crear el usuario en Auth
+        // Crear el usuario en Auth usando su DNI como contraseña inicial
         const userRecord = await admin.auth().createUser({
             email,
-            emailVerified: false,
+            password: dni.trim(),
+            emailVerified: true,
             displayName: name
         });
         // Asignar Custom Claim
@@ -512,45 +488,196 @@ exports.cf_createAdministrativeUser = (0, https_1.onRequest)({ cors: true }, asy
             role,
             email,
             nombre: name,
+            dni: dni.trim(),
+            mustChangePassword: true,
             emailInvalid: false,
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         });
-        // Enlace de activación
-        const redirectUrl = process.env.REDIRECT_URL || 'http://localhost:5173/auth-action';
-        const actionCodeSettings = {
-            url: redirectUrl,
-            handleCodeInApp: true
-        };
-        let emailSentSuccessfully = true;
-        let emailLink = '';
-        try {
-            emailLink = await admin.auth().generateEmailVerificationLink(email, actionCodeSettings);
-            const htmlContent = `
-        <h1>Registro de Personal - Educar para Transformar</h1>
-        <p>Hola ${name},</p>
-        <p>Has sido registrado en el portal administrativo con el rol de <strong>${role}</strong>.</p>
-        <p>Para activar tu cuenta y verificar tu dirección de correo, por favor haz clic en el siguiente enlace:</p>
-        <p><a href="${emailLink}">Activar Cuenta Administrativa</a></p>
-      `;
-            await (0, email_1.sendEmail)({
-                to: email,
-                subject: 'Activación de Cuenta de Personal - Educar para Transformar',
-                html: htmlContent
-            });
-        }
-        catch (mailError) {
-            console.error('Error al enviar email a administrativo:', mailError);
-            emailSentSuccessfully = false;
-            await db.collection('users').doc(userRecord.uid).update({ emailInvalid: true });
-        }
         res.status(201).send({
-            uid: userRecord.uid,
-            emailSentSuccessfully,
-            emailLink: emailSentSuccessfully ? undefined : emailLink
+            uid: userRecord.uid
         });
     }
     catch (error) {
         console.error('Error en cf_createAdministrativeUser:', error);
+        res.status(500).send({ error: error.message || 'Error interno.' });
+    }
+});
+/**
+ * 8. cf_resetUserPasswordToDni
+ * Invocada por un user_admin para restablecer la contraseña de cualquier usuario a su DNI.
+ */
+exports.cf_resetUserPasswordToDni = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
+    try {
+        const callerClaims = await verifyAuth(req);
+        if (callerClaims.role !== 'user_admin') {
+            res.status(403).send({ error: 'Permisos insuficientes: Requiere rol user_admin.' });
+            return;
+        }
+        const { userId, userType } = req.body;
+        if (!userId || !userType) {
+            res.status(400).send({ error: 'Faltan parámetros requeridos (userId, userType).' });
+            return;
+        }
+        if (userType === 'parent' || userType === 'administrative') {
+            const userRef = db.collection('users').doc(userId);
+            const userDoc = await userRef.get();
+            if (!userDoc.exists) {
+                res.status(404).send({ error: 'Usuario no encontrado.' });
+                return;
+            }
+            const userData = userDoc.data();
+            const dni = userData?.dni;
+            if (!dni) {
+                res.status(400).send({ error: 'El usuario no tiene registrado un DNI.' });
+                return;
+            }
+            // Restablecer contraseña en Auth al DNI
+            await admin.auth().updateUser(userId, {
+                password: dni.trim()
+            });
+            // Forzar cambio de contraseña
+            await userRef.update({
+                mustChangePassword: true
+            });
+            res.status(200).send({ message: 'Contraseña del usuario restablecida exitosamente a su DNI.' });
+        }
+        else if (userType === 'student') {
+            const studentRef = db.collection('students').doc(userId);
+            const studentDoc = await studentRef.get();
+            if (!studentDoc.exists) {
+                res.status(404).send({ error: 'Estudiante no encontrado.' });
+                return;
+            }
+            const studentData = studentDoc.data();
+            const dni = studentData?.dni;
+            if (!dni) {
+                res.status(400).send({ error: 'El estudiante no tiene registrado un DNI.' });
+                return;
+            }
+            // Generar nuevo hash bcrypt para el DNI del alumno
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(dni.trim(), salt);
+            // Actualizar en Firestore
+            await studentRef.update({
+                hashedPassword,
+                mustChangePassword: true
+            });
+            res.status(200).send({ message: 'Contraseña del estudiante restablecida exitosamente a su DNI.' });
+        }
+        else {
+            res.status(400).send({ error: 'userType inválido. Debe ser parent, administrative o student.' });
+        }
+    }
+    catch (error) {
+        console.error('Error en cf_resetUserPasswordToDni:', error);
+        res.status(500).send({ error: error.message || 'Error interno del servidor.' });
+    }
+});
+/**
+ * 9. cf_changeStudentPassword
+ * Invocada por el propio estudiante o administrador para actualizar la contraseña del estudiante.
+ */
+exports.cf_changeStudentPassword = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
+    try {
+        const callerClaims = await verifyAuth(req);
+        const { studentId, newPassword } = req.body;
+        if (!studentId || !newPassword) {
+            res.status(400).send({ error: 'Faltan parámetros requeridos (studentId, newPassword).' });
+            return;
+        }
+        // Permitir si es el propio estudiante o si es un administrador
+        if (callerClaims.role !== 'user_admin' && callerClaims.uid !== studentId) {
+            res.status(403).send({ error: 'Permisos insuficientes.' });
+            return;
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        await db.collection('students').doc(studentId).update({
+            hashedPassword,
+            mustChangePassword: false
+        });
+        res.status(200).send({ message: 'Contraseña del estudiante actualizada con éxito.' });
+    }
+    catch (error) {
+        console.error('Error en cf_changeStudentPassword:', error);
+        res.status(500).send({ error: error.message || 'Error interno.' });
+    }
+});
+/**
+ * 10. cf_updateUserProfile
+ * Invocada por un user_admin para modificar datos de perfiles (padre, alumno o administrativo).
+ */
+exports.cf_updateUserProfile = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
+    try {
+        const callerClaims = await verifyAuth(req);
+        if (callerClaims.role !== 'user_admin') {
+            res.status(403).send({ error: 'Permisos insuficientes.' });
+            return;
+        }
+        const { targetId, targetType, fields } = req.body;
+        if (!targetId || !targetType || !fields) {
+            res.status(400).send({ error: 'Faltan parámetros requeridos (targetId, targetType, fields).' });
+            return;
+        }
+        if (targetType === 'parent' || targetType === 'administrative') {
+            const userRef = db.collection('users').doc(targetId);
+            const userDoc = await userRef.get();
+            if (!userDoc.exists) {
+                res.status(404).send({ error: 'Usuario no encontrado.' });
+                return;
+            }
+            // Si se modifica el email, actualizar también en Firebase Auth
+            if (fields.email) {
+                await admin.auth().updateUser(targetId, {
+                    email: fields.email,
+                    displayName: fields.nombre || undefined
+                });
+            }
+            else if (fields.nombre) {
+                await admin.auth().updateUser(targetId, {
+                    displayName: fields.nombre
+                });
+            }
+            await userRef.update(fields);
+            res.status(200).send({ message: 'Perfil de usuario actualizado exitosamente.' });
+        }
+        else if (targetType === 'student') {
+            const studentRef = db.collection('students').doc(targetId);
+            const studentDoc = await studentRef.get();
+            if (!studentDoc.exists) {
+                res.status(404).send({ error: 'Estudiante no encontrado.' });
+                return;
+            }
+            await studentRef.update(fields);
+            res.status(200).send({ message: 'Perfil de estudiante actualizado exitosamente.' });
+        }
+        else {
+            res.status(400).send({ error: 'targetType inválido. Debe ser parent, administrative o student.' });
+        }
+    }
+    catch (error) {
+        console.error('Error en cf_updateUserProfile:', error);
+        res.status(500).send({ error: error.message || 'Error interno.' });
+    }
+});
+/**
+ * 11. cf_completePasswordChange
+ * Invocada por cualquier usuario autenticado tras cambiar su contraseña para marcar mustChangePassword como false.
+ */
+exports.cf_completePasswordChange = (0, https_1.onRequest)({ cors: true, invoker: 'public' }, async (req, res) => {
+    try {
+        const callerClaims = await verifyAuth(req);
+        const role = callerClaims.role;
+        if (role === 'Estudiante') {
+            await db.collection('students').doc(callerClaims.uid).update({ mustChangePassword: false });
+        }
+        else {
+            await db.collection('users').doc(callerClaims.uid).update({ mustChangePassword: false });
+        }
+        res.status(200).send({ message: 'Estado de cambio de contraseña registrado exitosamente.' });
+    }
+    catch (error) {
+        console.error('Error en cf_completePasswordChange:', error);
         res.status(500).send({ error: error.message || 'Error interno.' });
     }
 });
