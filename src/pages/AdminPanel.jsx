@@ -20,14 +20,22 @@ const AdminPanel = () => {
   // Form State for creating Parent & Students
   const [parentName, setParentName] = useState('');
   const [parentEmail, setParentEmail] = useState('');
+  const [parentDni, setParentDni] = useState('');
   const [students, setStudents] = useState([
-    { nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial' }
+    { nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial', genero: 'Masculino' }
   ]);
 
   // Form State for creating Administrative/Staff User
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
+  const [adminDni, setAdminDni] = useState('');
   const [adminRole, setAdminRole] = useState('Staff');
+
+  // Dashboard Sub-Tab ('students' or 'staff')
+  const [dashboardSubTab, setDashboardSubTab] = useState('students');
+
+  // Profile Editor Modal State
+  const [editingUser, setEditingUser] = useState(null); // { id, type, fields: { nombre, email, dni, ... } }
 
   // Loading, Errors, and Modal States
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,14 +60,14 @@ const AdminPanel = () => {
   const [searchFilter, setSearchFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState('todos');
 
-  // Check Auth & Role on mount
+  // Check Auth & Role on mount - Only user_admin allowed
   useEffect(() => {
     const checkAdminAuth = async () => {
       // 1. Check local mock/real context
       const savedUser = localStorage.getItem('school_user');
       const currentUser = savedUser ? JSON.parse(savedUser) : null;
       
-      if (currentUser && (currentUser.role === 'user_admin' || currentUser.role === 'Staff' || currentUser.role === 'Administrativo')) {
+      if (currentUser && currentUser.role === 'user_admin') {
         return;
       }
 
@@ -68,13 +76,13 @@ const AdminPanel = () => {
       if (firebaseUser) {
         const idTokenResult = await firebaseUser.getIdTokenResult();
         const role = idTokenResult.claims.role;
-        if (role === 'user_admin' || role === 'Staff' || role === 'Administrativo') {
+        if (role === 'user_admin') {
           return;
         }
       }
 
       // If not allowed, redirect to login
-      console.warn("Acceso denegado al Panel de Administración.");
+      console.warn("Acceso denegado al Panel de Administración. Requiere rol user_admin.");
       navigate('/login');
     };
     checkAdminAuth();
@@ -124,15 +132,15 @@ const AdminPanel = () => {
     e.preventDefault();
     setFormError('');
 
-    if (!parentEmail.trim() || !parentName.trim()) {
-      setFormError('Por favor, completa los datos del tutor.');
+    if (!parentEmail.trim() || !parentName.trim() || !parentDni.trim()) {
+      setFormError('Por favor, completa todos los datos del tutor (nombre, email y DNI).');
       return;
     }
 
     // Validate students list
     for (const std of students) {
-      if (!std.nombre.trim() || !std.dni.trim() || !std.fechaNacimiento) {
-        setFormError('Por favor, completa todos los datos de los estudiantes.');
+      if (!std.nombre.trim() || !std.dni.trim() || !std.fechaNacimiento || !std.genero) {
+        setFormError('Por favor, completa todos los datos de los estudiantes (incluyendo género).');
         return;
       }
     }
@@ -141,7 +149,6 @@ const AdminPanel = () => {
     try {
       const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
       
-      // Intentar obtener token real de Firebase Auth si existe
       let token = 'mock-admin-token';
       if (auth.currentUser) {
         token = await auth.currentUser.getIdToken();
@@ -154,8 +161,9 @@ const AdminPanel = () => {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          parentEmail,
-          parentName,
+          parentEmail: parentEmail.trim(),
+          parentName: parentName.trim(),
+          parentDni: parentDni.trim(),
           students
         })
       });
@@ -169,18 +177,15 @@ const AdminPanel = () => {
 
       setSuccessModalData({
         title: '¡Tutor y Alumnos Creados!',
-        message: `Se ha registrado a ${parentName}. Cuenta de tutor creada e hijos vinculados. ${
-          result.emailSentSuccessfully 
-            ? 'Se envió el correo de activación.' 
-            : 'Fallo al enviar correo. Copia el enlace de activación manualmente.'
-        }`
+        message: `Se ha registrado a ${parentName} con DNI ${parentDni}. Las cuentas han sido activadas. El tutor podrá ingresar usando su DNI como contraseña temporal.`
       });
       setSuccessModalOpen(true);
 
       // Reset Form
       setParentEmail('');
       setParentName('');
-      setStudents([{ nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial' }]);
+      setParentDni('');
+      setStudents([{ nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial', genero: 'Masculino' }]);
 
     } catch (err) {
       console.error(err);
@@ -194,8 +199,8 @@ const AdminPanel = () => {
     e.preventDefault();
     setFormError('');
 
-    if (!adminEmail.trim() || !adminName.trim() || !adminRole) {
-      setFormError('Por favor, completa todos los campos del formulario.');
+    if (!adminEmail.trim() || !adminName.trim() || !adminRole || !adminDni.trim()) {
+      setFormError('Por favor, completa todos los campos del formulario (incluyendo DNI).');
       return;
     }
 
@@ -217,7 +222,8 @@ const AdminPanel = () => {
         body: JSON.stringify({
           email: adminEmail.trim(),
           name: adminName.trim(),
-          role: adminRole
+          role: adminRole,
+          dni: adminDni.trim()
         })
       });
 
@@ -230,17 +236,14 @@ const AdminPanel = () => {
 
       setSuccessModalData({
         title: '¡Usuario Creado!',
-        message: `Se ha registrado a ${adminName} con el rol de ${adminRole}. ${
-          result.emailSentSuccessfully 
-            ? 'Se envió el correo de activación.' 
-            : 'Fallo al enviar correo. Copia el enlace de activación manualmente.'
-        }`
+        message: `Se ha registrado a ${adminName} con el rol de ${adminRole}. Cuenta activa. El usuario podrá ingresar utilizando su DNI como contraseña temporal.`
       });
       setSuccessModalOpen(true);
 
       // Reset Form
       setAdminEmail('');
       setAdminName('');
+      setAdminDni('');
       setAdminRole('Staff');
 
     } catch (err) {
@@ -259,7 +262,7 @@ const AdminPanel = () => {
   };
 
   const addStudentField = () => {
-    setStudents([...students, { nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial' }]);
+    setStudents([...students, { nombre: '', dni: '', fechaNacimiento: '', nivel: 'inicial', genero: 'Masculino' }]);
   };
 
   const removeStudentField = (index) => {
@@ -268,8 +271,15 @@ const AdminPanel = () => {
     setStudents(updated);
   };
 
-  // Call API cf_resendActivationLink
-  const handleResendActivation = async (targetType, targetId) => {
+  // Restablecer contraseña al DNI
+  const handleResetPassword = async (userId, userType, userDni) => {
+    if (!userDni) {
+      alert('Error: El DNI del usuario es requerido para el restablecimiento.');
+      return;
+    }
+    if (!window.confirm(`¿Estás seguro de que deseas restablecer la contraseña al DNI (${userDni}) por defecto?`)) {
+      return;
+    }
     try {
       const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
       let token = 'mock-admin-token';
@@ -277,13 +287,13 @@ const AdminPanel = () => {
         token = await auth.currentUser.getIdToken();
       }
 
-      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_resendActivationLink`, {
+      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_resetUserPasswordToDni`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ targetType, targetId })
+        body: JSON.stringify({ userId, userType })
       });
 
       if (!response.ok) {
@@ -291,18 +301,17 @@ const AdminPanel = () => {
         throw new Error(err.error || 'Fallo de API.');
       }
 
-      alert('Enlace de activación reenviado con éxito.');
+      alert('Contraseña restablecida con éxito al DNI. El usuario deberá cambiarla la próxima vez que ingrese.');
       fetchDashboardData();
     } catch (err) {
-      alert(`Error al reenviar enlace: ${err.message}`);
+      alert(`Error al restablecer contraseña: ${err.message}`);
     }
   };
 
-  // Call API cf_updateParentEmailAndResend
-  const handleUpdateEmail = async (parentUid) => {
-    const newEmail = prompt('Ingresa el nuevo correo electrónico del tutor:');
-    if (!newEmail) return;
-
+  // Guardar cambios del formulario de edición
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingUser) return;
     try {
       const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
       let token = 'mock-admin-token';
@@ -310,13 +319,17 @@ const AdminPanel = () => {
         token = await auth.currentUser.getIdToken();
       }
 
-      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_updateParentEmailAndResend`, {
+      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_updateUserProfile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ parentUid, newEmail })
+        body: JSON.stringify({
+          targetId: editingUser.id,
+          targetType: editingUser.type,
+          fields: editingUser.fields
+        })
       });
 
       if (!response.ok) {
@@ -324,23 +337,51 @@ const AdminPanel = () => {
         throw new Error(err.error || 'Fallo de API.');
       }
 
-      alert('Correo actualizado e invitación reenviada.');
+      alert('Perfil actualizado con éxito.');
+      setEditingUser(null);
       fetchDashboardData();
     } catch (err) {
-      alert(`Error al actualizar correo: ${err.message}`);
+      alert(`Error al actualizar perfil: ${err.message}`);
     }
+  };
+
+  const handleEditFieldChange = (field, value) => {
+    setEditingUser(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        fields: {
+          ...prev.fields,
+          [field]: value
+        }
+      };
+    });
   };
 
   // Filter logic on the dashboard list
   const filteredStudents = studentsList.filter(student => {
     const matchesSearch = 
-      student.nombre.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      student.studentID_login.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      student.emailPadre.toLowerCase().includes(searchFilter.toLowerCase());
+      (student.nombre || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+      (student.studentID_login || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+      (student.dni || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+      (student.emailPadre || '').toLowerCase().includes(searchFilter.toLowerCase());
     
-    const matchesLevel = levelFilter === 'todos' || student.nivel === levelFilter;
+    const matchesLevel = levelFilter === 'todos' || (student.nivel || 'inicial') === levelFilter;
 
     return matchesSearch && matchesLevel;
+  });
+
+  const filteredStaff = parentsList.filter(user => {
+    // Solo personal institucional (user_admin, Staff, Administrativo)
+    const isStaff = user.role === 'user_admin' || user.role === 'Staff' || user.role === 'Administrativo';
+    if (!isStaff) return false;
+
+    const matchesSearch = 
+      (user.nombre || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+      (user.email || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+      (user.dni || '').toLowerCase().includes(searchFilter.toLowerCase());
+
+    return matchesSearch;
   });
 
   return (
@@ -430,6 +471,30 @@ const AdminPanel = () => {
               </div>
             )}
 
+            {/* Sub-tabs Selector */}
+            <div className="flex bg-slate-200/40 p-1 rounded-xl border border-slate-200/50 max-w-md">
+              <button
+                onClick={() => setDashboardSubTab('students')}
+                className={`flex-1 py-2 rounded-lg font-label font-bold text-xs transition-all cursor-pointer border-none ${
+                  dashboardSubTab === 'students'
+                    ? 'bg-orange-500 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 bg-transparent'
+                }`}
+              >
+                Estudiantes y Tutores
+              </button>
+              <button
+                onClick={() => setDashboardSubTab('staff')}
+                className={`flex-1 py-2 rounded-lg font-label font-bold text-xs transition-all cursor-pointer border-none ${
+                  dashboardSubTab === 'staff'
+                    ? 'bg-orange-500 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 bg-transparent'
+                }`}
+              >
+                Personal Institucional
+              </button>
+            </div>
+
             {/* Users Table */}
             <div className="bg-white rounded-3xl border border-slate-100 shadow-xl overflow-hidden">
               <div className="overflow-x-auto">
@@ -438,48 +503,51 @@ const AdminPanel = () => {
                     <div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-4"></div>
                     <p className="font-semibold">Cargando base de datos...</p>
                   </div>
-                ) : filteredStudents.length === 0 ? (
+                ) : (dashboardSubTab === 'students' ? filteredStudents.length === 0 : filteredStaff.length === 0) ? (
                   <div className="p-16 text-center text-slate-500">
                     <Icon name="person_off" className="text-5xl text-slate-300 mb-4" />
-                    <p className="font-bold text-lg">No se encontraron estudiantes creados</p>
+                    <p className="font-bold text-lg">No se encontraron usuarios</p>
                     <p className="text-sm mt-1">Prueba con otros criterios de búsqueda o añade nuevos usuarios.</p>
                   </div>
-                ) : (
+                ) : dashboardSubTab === 'students' ? (
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
                         <th className="py-4 px-6">Estudiante / ID</th>
                         <th className="py-4 px-6">Nivel</th>
                         <th className="py-4 px-6">Tutor / Contacto</th>
-                        <th className="py-4 px-6">Estado</th>
+                        <th className="py-4 px-6">Estado (Clave)</th>
                         <th className="py-4 px-6 text-center">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
                       {filteredStudents.map((student) => {
-                        const parent = parentsList.find(p => p.id === student.parentId) || { nombre: 'Cargando...', emailInvalid: false };
+                        const parent = parentsList.find(p => p.id === student.parentId) || { nombre: 'Sin Tutor', email: '', dni: '', mustChangePassword: true, emailInvalid: false };
                         return (
                           <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
                             <td className="py-5 px-6">
                               <div className="flex flex-col gap-0.5">
                                 <span className="font-bold text-slate-800">{student.nombre}</span>
-                                <span className="text-xs text-slate-400 font-mono">{student.studentID_login} (DNI: {student.dni})</span>
+                                <span className="text-xs text-slate-400 font-mono">
+                                  {student.studentID_login} | DNI: {student.dni} | Género: {student.genero || 'No especificado'}
+                                </span>
                               </div>
                             </td>
                             <td className="py-5 px-6">
                               <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                student.nivel === 'inicial' ? 'bg-secondary-container/20 text-secondary' :
-                                student.nivel === 'primaria' ? 'bg-primary-container/20 text-primary' :
+                                (student.nivel || 'inicial') === 'inicial' ? 'bg-secondary-container/20 text-secondary' :
+                                (student.nivel || 'inicial') === 'primaria' ? 'bg-primary-container/20 text-primary' :
                                 'bg-tertiary-container/20 text-tertiary-dim'
                               }`}>
-                                {student.nivel.toUpperCase()}
+                                {(student.nivel || 'inicial').toUpperCase()}
                               </span>
                             </td>
                             <td className="py-5 px-6">
                               <div className="flex flex-col gap-0.5">
                                 <span className="font-semibold text-slate-700">{parent.nombre}</span>
                                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                                  <span>{student.emailPadre}</span>
+                                  <span>{parent.email || student.emailPadre}</span>
+                                  {parent.dni && <span className="text-slate-300">| DNI: {parent.dni}</span>}
                                   {parent.emailInvalid && (
                                     <span className="flex items-center gap-0.5 text-red-500 font-bold uppercase tracking-wider text-[9px] bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
                                       <Icon name="error" className="text-[10px]" />
@@ -490,45 +558,161 @@ const AdminPanel = () => {
                               </div>
                             </td>
                             <td className="py-5 px-6">
-                              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                                student.status === 'active' 
-                                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
-                              }`}>
-                                <span className={`h-2 w-2 rounded-full ${student.status === 'active' ? 'bg-green-600' : 'bg-amber-500 animate-pulse'}`} />
-                                {student.status === 'active' ? 'Activo' : 'Pendiente'}
-                              </span>
+                              <div className="flex flex-col gap-1.5">
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
+                                  student.mustChangePassword
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-green-50 text-green-700 border border-green-200'
+                                }`}>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${student.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
+                                  Alumno: {student.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
+                                </span>
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
+                                  parent.mustChangePassword
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-green-50 text-green-700 border border-green-200'
+                                }`}>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${parent.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
+                                  Tutor: {parent.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
+                                </span>
+                              </div>
                             </td>
                             <td className="py-5 px-6">
-                              <div className="flex justify-center items-center gap-2">
-                                <button
-                                  onClick={() => handleResendActivation('student', student.id)}
-                                  title="Reenviar activación del estudiante"
-                                  className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors cursor-pointer"
-                                >
-                                  <Icon name="sync" className="text-base" />
-                                </button>
-                                <button
-                                  onClick={() => handleResendActivation('parent', student.parentId)}
-                                  title="Reenviar verificación del tutor"
-                                  className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors cursor-pointer"
-                                >
-                                  <Icon name="mail" className="text-base" />
-                                </button>
-                                {parent.emailInvalid && (
+                              <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-1.5 bg-orange-50/50 p-1.5 rounded-lg border border-orange-100">
+                                  <span className="text-[10px] font-bold text-orange-700 uppercase">Alumno:</span>
                                   <button
-                                    onClick={() => handleUpdateEmail(student.parentId)}
-                                    title="Modificar Email y Reenviar"
-                                    className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
+                                    onClick={() => handleResetPassword(student.id, 'student', student.dni)}
+                                    title="Restablecer clave del estudiante al DNI"
+                                    className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
                                   >
-                                    <Icon name="edit" className="text-base" />
+                                    <Icon name="lock_reset" className="text-sm" />
                                   </button>
+                                  <button
+                                    onClick={() => setEditingUser({
+                                      id: student.id,
+                                      type: 'student',
+                                      fields: {
+                                        nombre: student.nombre || '',
+                                        dni: student.dni || '',
+                                        fechaNacimiento: student.fechaNacimiento || '',
+                                        nivel: student.nivel || 'inicial',
+                                        genero: student.genero || 'Masculino'
+                                      }
+                                    })}
+                                    title="Editar datos del alumno"
+                                    className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
+                                  >
+                                    <Icon name="edit" className="text-sm" />
+                                  </button>
+                                </div>
+                                {student.parentId && (
+                                  <div className="flex items-center gap-1.5 bg-indigo-50/50 p-1.5 rounded-lg border border-indigo-100">
+                                    <span className="text-[10px] font-bold text-indigo-700 uppercase">Tutor:</span>
+                                    <button
+                                      onClick={() => handleResetPassword(student.parentId, 'parent', parent.dni)}
+                                      title="Restablecer clave del tutor al DNI"
+                                      className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                    >
+                                      <Icon name="lock_reset" className="text-sm" />
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingUser({
+                                        id: student.parentId,
+                                        type: 'parent',
+                                        fields: {
+                                          nombre: parent.nombre || '',
+                                          dni: parent.dni || '',
+                                          email: parent.email || student.emailPadre || ''
+                                        }
+                                      })}
+                                      title="Editar datos del tutor"
+                                      className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                    >
+                                      <Icon name="edit" className="text-sm" />
+                                    </button>
+                                  </div>
                                 )}
                               </div>
                             </td>
                           </tr>
                         );
                       })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
+                        <th className="py-4 px-6">Nombre / DNI</th>
+                        <th className="py-4 px-6">Rol Institucional</th>
+                        <th className="py-4 px-6">Contacto (Email)</th>
+                        <th className="py-4 px-6">Estado (Clave)</th>
+                        <th className="py-4 px-6 text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
+                      {filteredStaff.map((staff) => (
+                        <tr key={staff.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="py-5 px-6">
+                            <div className="flex flex-col gap-0.5">
+                              <span className="font-bold text-slate-800">{staff.nombre}</span>
+                              <span className="text-xs text-slate-400 font-mono">DNI: {staff.dni || 'No registrado'}</span>
+                            </div>
+                          </td>
+                          <td className="py-5 px-6">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                              staff.role === 'user_admin' ? 'bg-red-50 text-red-700 border border-red-200' :
+                              staff.role === 'Administrativo' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                              'bg-green-50 text-green-700 border border-green-200'
+                            }`}>
+                              {staff.role === 'user_admin' ? 'Administrador General' :
+                               staff.role === 'Administrativo' ? 'Administrativo' :
+                               'Docente / Staff'}
+                            </span>
+                          </td>
+                          <td className="py-5 px-6">
+                            <span className="text-slate-600">{staff.email}</span>
+                          </td>
+                          <td className="py-5 px-6">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                              staff.mustChangePassword 
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                                : 'bg-green-50 text-green-700 border border-green-200'
+                            }`}>
+                              <span className={`h-2 w-2 rounded-full ${staff.mustChangePassword ? 'bg-amber-500 animate-pulse' : 'bg-green-600'}`} />
+                              {staff.mustChangePassword ? 'Temporal (DNI)' : 'Clave Segura'}
+                            </span>
+                          </td>
+                          <td className="py-5 px-6 text-center">
+                            <div className="flex justify-center items-center gap-2">
+                              <button
+                                onClick={() => handleResetPassword(staff.id, 'administrative', staff.dni)}
+                                title="Restablecer clave del personal al DNI"
+                                className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors cursor-pointer border border-orange-200/50"
+                              >
+                                <Icon name="lock_reset" className="text-base" />
+                              </button>
+                              <button
+                                onClick={() => setEditingUser({
+                                  id: staff.id,
+                                  type: 'administrative',
+                                  fields: {
+                                    nombre: staff.nombre || '',
+                                    dni: staff.dni || '',
+                                    email: staff.email || '',
+                                    role: staff.role || 'Staff'
+                                  }
+                                })}
+                                title="Editar datos del personal"
+                                className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors cursor-pointer border border-indigo-200/50"
+                              >
+                                <Icon name="edit" className="text-base" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 )}
@@ -586,7 +770,7 @@ const AdminPanel = () => {
                 {/* Tutor Section */}
                 <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-200/60 space-y-4 text-left">
                   <h3 className="font-label font-bold text-xs uppercase tracking-widest text-slate-500">Datos del Padre/Tutor</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="flex flex-col gap-2">
                       <label className="text-sm font-semibold text-slate-600">Nombre Completo del Tutor</label>
                       <input
@@ -594,6 +778,17 @@ const AdminPanel = () => {
                         placeholder="Ej. Andrés Martínez"
                         value={parentName}
                         onChange={(e) => setParentName(e.target.value)}
+                        className="px-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-orange-500 focus:outline-none transition-all text-sm"
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-semibold text-slate-600">DNI del Tutor</label>
+                      <input
+                        type="text"
+                        placeholder="Número de DNI"
+                        value={parentDni}
+                        onChange={(e) => setParentDni(e.target.value.replace(/\D/g, ''))}
                         className="px-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-orange-500 focus:outline-none transition-all text-sm"
                         required
                       />
@@ -641,7 +836,7 @@ const AdminPanel = () => {
                         
                         <h4 className="font-label font-bold text-xs text-orange-600">Estudiante #{idx + 1}</h4>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                           <div className="flex flex-col gap-2">
                             <label className="text-xs font-semibold text-slate-600">Nombre Completo</label>
                             <input
@@ -685,6 +880,19 @@ const AdminPanel = () => {
                               <option value="inicial">Nivel Inicial</option>
                               <option value="primaria">Primaria</option>
                               <option value="secundaria">Secundaria</option>
+                            </select>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <label className="text-xs font-semibold text-slate-600">Género</label>
+                            <select
+                              value={student.genero || 'Masculino'}
+                              onChange={(e) => handleStudentChange(idx, 'genero', e.target.value)}
+                              className="px-4 py-2.5 border border-slate-200 rounded-xl focus:border-orange-500 focus:outline-none transition-all text-xs appearance-none"
+                              required
+                            >
+                              <option value="Masculino">Masculino</option>
+                              <option value="Femenino">Femenino</option>
+                              <option value="Otro">Otro / No Binario</option>
                             </select>
                           </div>
                         </div>
@@ -737,6 +945,17 @@ const AdminPanel = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-2">
+                      <label className="text-sm font-semibold text-slate-600">DNI del Personal</label>
+                      <input
+                        type="text"
+                        placeholder="Número de DNI"
+                        value={adminDni}
+                        onChange={(e) => setAdminDni(e.target.value.replace(/\D/g, ''))}
+                        className="px-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-orange-500 focus:outline-none transition-all text-sm"
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
                       <label className="text-sm font-semibold text-slate-600">Correo Electrónico</label>
                       <input
                         type="email"
@@ -747,7 +966,7 @@ const AdminPanel = () => {
                         required
                       />
                     </div>
-                    <div className="flex flex-col gap-2 md:col-span-2">
+                    <div className="flex flex-col gap-2">
                       <label className="text-sm font-semibold text-slate-600">Rol Institucional</label>
                       <select
                         value={adminRole}
@@ -807,6 +1026,165 @@ const AdminPanel = () => {
         iconBg="bg-green-100"
         iconColor="text-green-600"
       />
+
+      {/* Modal de Edición de Datos */}
+      {editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-lg bg-white rounded-[2rem] border border-slate-200 shadow-2xl p-8 animate-scale-in text-left">
+            <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+              <h3 className="font-headline text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <Icon name="edit" className="text-orange-500" />
+                <span>
+                  Editar {editingUser.type === 'student' ? 'Estudiante' : 
+                          editingUser.type === 'parent' ? 'Tutor' : 'Personal'}
+                </span>
+              </h3>
+              <button 
+                onClick={() => setEditingUser(null)}
+                className="text-slate-400 hover:text-slate-600 transition-colors border-none bg-transparent cursor-pointer"
+              >
+                <Icon name="close" className="text-xl" />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-6">
+              {editingUser.type === 'student' && (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre Completo</label>
+                    <input
+                      type="text"
+                      value={editingUser.fields.nombre || ''}
+                      onChange={(e) => handleEditFieldChange('nombre', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">DNI</label>
+                    <input
+                      type="text"
+                      value={editingUser.fields.dni || ''}
+                      onChange={(e) => handleEditFieldChange('dni', e.target.value.replace(/\D/g, ''))}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Fecha de Nacimiento</label>
+                    <input
+                      type="date"
+                      value={editingUser.fields.fechaNacimiento || ''}
+                      onChange={(e) => handleEditFieldChange('fechaNacimiento', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nivel Educativo</label>
+                    <select
+                      value={editingUser.fields.nivel || 'inicial'}
+                      onChange={(e) => handleEditFieldChange('nivel', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm appearance-none"
+                      required
+                    >
+                      <option value="inicial">Nivel Inicial</option>
+                      <option value="primaria">Primaria</option>
+                      <option value="secundaria">Secundaria</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Género</label>
+                    <select
+                      value={editingUser.fields.genero || 'Masculino'}
+                      onChange={(e) => handleEditFieldChange('genero', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm appearance-none"
+                      required
+                    >
+                      <option value="Masculino">Masculino</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Otro">Otro / No Binario</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {(editingUser.type === 'parent' || editingUser.type === 'administrative') && (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre Completo</label>
+                    <input
+                      type="text"
+                      value={editingUser.fields.nombre || ''}
+                      onChange={(e) => handleEditFieldChange('nombre', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">DNI</label>
+                    <input
+                      type="text"
+                      value={editingUser.fields.dni || ''}
+                      onChange={(e) => handleEditFieldChange('dni', e.target.value.replace(/\D/g, ''))}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      value={editingUser.fields.email || ''}
+                      onChange={(e) => handleEditFieldChange('email', e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  {editingUser.type === 'administrative' && (
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Rol Institucional</label>
+                      <select
+                        value={editingUser.fields.role || 'Staff'}
+                        onChange={(e) => handleEditFieldChange('role', e.target.value)}
+                        className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-sm appearance-none"
+                        required
+                      >
+                        <option value="Staff">Docente / Staff</option>
+                        <option value="Administrativo">Administrativo</option>
+                        <option value="user_admin">Administrador General</option>
+                      </select>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-full transition-all cursor-pointer border-none"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm rounded-full shadow-lg shadow-orange-600/10 transition-all cursor-pointer border-none"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

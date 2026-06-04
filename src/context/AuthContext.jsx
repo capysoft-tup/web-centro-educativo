@@ -101,8 +101,67 @@ export const AuthProvider = ({ children }) => {
     await signOut(auth);
   };
 
+  /**
+   * Método para cambiar contraseña y limpiar la bandera mustChangePassword
+   */
+  const changePasswordReal = async (newPassword) => {
+    if (!user) throw new Error("No hay un usuario autenticado.");
+
+    const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
+    const idToken = await auth.currentUser.getIdToken(true);
+
+    if (user.role === 'Estudiante') {
+      // Para estudiantes: Llamar a cf_changeStudentPassword (hashing interno en Firestore)
+      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_changeStudentPassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          studentId: user.uid,
+          newPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Error al actualizar contraseña del alumno.');
+      }
+    } else {
+      // Para Padres / Personal: Usar SDK cliente de Firebase para cambiar la contraseña
+      const { updatePassword } = await import('firebase/auth');
+      await updatePassword(auth.currentUser, newPassword);
+
+      // Notificar al backend para que limpie el flag mustChangePassword en Firestore
+      const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_completePasswordChange`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        }
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Error al limpiar bandera de contraseña temporal.');
+      }
+    }
+
+    // Actualizar el estado del usuario localmente para remover el bloqueo de contraseña
+    setUser(prev => prev ? { ...prev, mustChangePassword: false } : null);
+    
+    // Sincronizar en localStorage
+    const savedUser = localStorage.getItem('school_user');
+    if (savedUser) {
+      const parsed = JSON.parse(savedUser);
+      parsed.mustChangePassword = false;
+      localStorage.setItem('school_user', JSON.stringify(parsed));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login: loginReal, logout: logoutReal, isLoggedIn: !!user, loading }}>
+    <AuthContext.Provider value={{ user, login: loginReal, logout: logoutReal, changePassword: changePasswordReal, isLoggedIn: !!user, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

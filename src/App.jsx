@@ -1,20 +1,22 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Contact from './pages/Contact';
-import Registration from './pages/Registration';
-import EmploymentRequest from './pages/EmploymentRequest'
-import News from './pages/News'
-import Wellness from './pages/Wellness'
-import Levels from './pages/Levels'
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-import Gallery from './pages/Gallery';
-import AdminPanel from './pages/AdminPanel';
+import { Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
+import ChangePasswordModal from './components/organisms/ChangePasswordModal';
+import AdminPanel from './pages/AdminPanel';
+import Contact from './pages/Contact';
+import EmploymentRequest from './pages/EmploymentRequest';
+import Gallery from './pages/Gallery';
+import Home from './pages/Home';
+import Levels from './pages/Levels';
+import Login from './pages/Login';
+import News from './pages/News';
+import NotFound from './pages/NotFound';
+import Registration from './pages/Registration';
+import Wellness from './pages/Wellness';
 
 function App() {
   return (
     <>
+      <ChangePasswordModal />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
