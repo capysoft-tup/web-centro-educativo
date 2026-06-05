@@ -221,7 +221,7 @@ const Registration = () => {
                   {errores.nombreTutor && <p className="form-error">{errores.nombreTutor}</p>}
                 </div>
                 <div className="form-grupo">
-                  <label className="form-label">DNI / PASAPORTE</label>
+                  <label className="form-label">DNI</label>
                   <input
                     className={`form-input ${errores.dniTutor ? 'form-input--error' : ''}`}
                     type="text"
