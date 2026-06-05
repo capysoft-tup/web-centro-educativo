@@ -5,9 +5,15 @@ import Button from './Button';
 import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 
-const Navbar = () => {
+const Navbar = ({ noButtons = false }) => {
   const navigate = useNavigate();
   const { user, logout, isLoggedIn } = useAuth();
+  const displayName =
+    user?.nombre ||
+    user?.name ||
+    user?.username ||
+    user?.email?.split('@')[0] ||
+    'Usuario';
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
@@ -27,33 +33,102 @@ const Navbar = () => {
   return (
     <nav className="custom-navbar">
       <div className="navbar-content">
-        <Link to="/" className="navbar-logo" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <img src={logo} alt="Logo Educar para Transformar" className="navbar-logo-icon" onError={(e) => e.target.style.display = 'none'} />
+        <Link
+          to="/"
+          className="navbar-logo"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <img
+            src={logo}
+            alt="Logo Educar para Transformar"
+            className="navbar-logo-icon"
+            onError={(e) => (e.target.style.display = 'none')}
+          />
           <span>Educar para Transformar</span>
         </Link>
-
-        <div className="navbar-links">
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inicio</NavLink>
-          <NavLink to="/wellness" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Bienestar</NavLink>
-          <NavLink to="/news" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Noticias</NavLink>
-          <NavLink to="/gallery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Galería</NavLink>
-          <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Contacto</NavLink>
-          <NavLink to="/register" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inscripciones</NavLink>
-          <NavLink to="/employment-request" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Empleo</NavLink>
-        </div>
-
+        {!noButtons && (
+          <div className="navbar-links">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Inicio
+            </NavLink>
+            <NavLink
+              to="/wellness"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Bienestar
+            </NavLink>
+            <NavLink
+              to="/news"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Noticias
+            </NavLink>
+            <NavLink
+              to="/gallery"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Galería
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Contacto
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Inscripciones
+            </NavLink>
+            <NavLink
+              to="/employment-request"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Empleo
+            </NavLink>
+          </div>
+        )}
         <div className="navbar-actions">
           {isLoggedIn && user ? (
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className="flex pl-3 pr-3 items-center gap-2.5 px-4.5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-full font-label font-bold text-sm shadow-md hover:from-orange-600 hover:to-amber-600 transition-all duration-200 cursor-pointer focus:outline-none"
+                data-testid="user-menu-button"
               >
-                <span className="material-symbols-outlined text-lg flex items-center justify-center" style={{ fontVariationSettings: "'FILL' 1" }}>
+                <span
+                  className="material-symbols-outlined text-lg flex items-center justify-center"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
                   account_circle
                 </span>
-                <span>Hola, {user.username}</span>
-                <span className="material-symbols-outlined text-sm flex items-center justify-center transition-transform duration-200" style={{ transform: isUserMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                <span>Hola, {displayName}</span>
+                <span
+                  className="material-symbols-outlined text-sm flex items-center justify-center transition-transform duration-200"
+                  style={{
+                    transform: isUserMenuOpen
+                      ? 'rotate(180deg)'
+                      : 'rotate(0deg)',
+                  }}
+                >
                   expand_more
                 </span>
               </button>
@@ -62,7 +137,7 @@ const Navbar = () => {
                 <div className="absolute right-0 mt-2.5 w-48 bg-white border border-slate-200 rounded-xl shadow-[0px_10px_25px_rgba(0,0,0,0.08)] py-2 space-y-1 z-30 animate-in fade-in slide-in-from-top-2 duration-150 text-left">
                   <button
                     onClick={() => {
-                      alert("Esta sección de perfil aún no está disponible.");
+                      alert('Esta sección de perfil aún no está disponible.');
                       setIsUserMenuOpen(false);
                     }}
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-slate-700 hover:bg-slate-50 transition-colors text-sm font-semibold cursor-pointer text-left focus:outline-none"
@@ -90,7 +165,9 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Button variant="primary" onClick={() => navigate('/login')}>Acceso Usuario</Button>
+            <Button variant="primary" onClick={() => navigate('/login')}>
+              Acceso Usuario
+            </Button>
           )}
         </div>
       </div>
