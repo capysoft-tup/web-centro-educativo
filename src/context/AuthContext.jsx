@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   const loginReal = async (identifier, password, role) => {
     if (role === 'Estudiante') {
       // Iniciar sesión de alumno usando la Cloud Function cf_loginStudent (devuelve customToken)
-      const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
+      const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1' : 'https://us-central1-centro-educativo-f5cc5.cloudfunctions.net');
       const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_loginStudent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   const changePasswordReal = async (newPassword) => {
     if (!user) throw new Error("No hay un usuario autenticado.");
 
-    const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
+    const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1' : 'https://us-central1-centro-educativo-f5cc5.cloudfunctions.net');
     const idToken = await auth.currentUser.getIdToken(true);
 
     if (user.role === 'Estudiante') {
