@@ -250,7 +250,7 @@ const Login = () => {
               <img
                 alt="Logo Educar para Transformar"
                 className="h-16 w-auto object-contain mb-4 bg-white rounded-xl p-2 shadow-md"
-                src={logo}
+                src={images.logo}
                 onError={(e) => {
                   e.target.src =
                     'https://lh3.googleusercontent.com/aida/ADBb0ugJ1I9qKGq-LA1zkyP0mAJ6KMVoto-k2Bhko7jS4BgxauPND3UeAT0onvR1k3ArEIe80EYEIMFR8Bwmy9Wq6vif1Hl7DAh1-BrEutL_eg8cYRnUjvE5tspD46XGp7iF9rIOZa8T-GNoMMlJIBDJIzgLlyIj-mRW9JHn4QnEsHs-VN4XmpP7DLXTLi0_GmkFUlL2utzr7RRQS131G6KzO_u524R8pUernkXd1WN1UmvTuth2AT7diNd-5Yg';
