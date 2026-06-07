@@ -39,29 +39,27 @@ const BentoCard = ({
     return (
       <div className={cardClasses}>
         <div className="bento-card-image-wrapper">
-          <img 
-            src={image} 
-            alt={title} 
+          <img
+            loading="lazy"
+            src={image}
+            alt={title}
             className="bento-card-image"
           />
         </div>
         <div className="bento-card-horizontal-content">
           {badgeText && (
-            <Badge 
-              text={badgeText} 
-              variant={badgeVariant} 
+            <Badge
+              text={badgeText}
+              variant={badgeVariant}
               animated={animatedBadge}
               className="mb-3"
             />
           )}
           <h3 className="bento-card-title">{title}</h3>
           <p className="bento-card-description">{description}</p>
-          
+
           {buttonText && (
-            <button 
-              onClick={onButtonClick} 
-              className="bento-card-btn-action"
-            >
+            <button onClick={onButtonClick} className="bento-card-btn-action">
               {buttonText}
               <Icon name="chevron_right" className="text-sm" />
             </button>

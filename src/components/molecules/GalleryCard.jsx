@@ -36,19 +36,22 @@ const GalleryCard = ({
   }
 
   return (
-    <div className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low`}>
+    <div
+      className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low`}
+    >
       {/* Imagen con animación de escala al hacer hover */}
       {image && (
-        <img 
-          src={image} 
-          alt={altText || title} 
+        <img
+          loading="lazy"
+          src={image}
+          alt={altText || title}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
       )}
-      
+
       {/* Capa de degradado oscuro inferior para asegurar la legibilidad del texto blanco */}
       <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent"></div>
-      
+
       {/* Contenido en la esquina inferior izquierda */}
       <div className="absolute bottom-0 left-0 p-6 md:p-8 text-left z-10">
         {badgeText && (

@@ -32,37 +32,40 @@ const NewsCard = ({
   // 1. RENDER PARA NOTICIA DESTACADA (FEATURED)
   if (variant === 'featured') {
     return (
-      <article 
+      <article
         onClick={handleCardClick}
         className="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 relative overflow-hidden group cursor-pointer border border-surface-container-highest shadow-md transition-all duration-300"
       >
         {/* Capa decorativa y gradiente de fondo */}
         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-highest/90 via-slate-950/40 to-transparent opacity-95 z-10 transition-opacity duration-300"></div>
-        
+
         {image && (
-          <img 
-            alt={title} 
-            src={image} 
+          <img
+            loading="lazy"
+            alt={title}
+            src={image}
             className="absolute inset-0 w-full h-full object-cover opacity-50 rounded-xl z-0 transition-transform duration-700 group-hover:scale-[1.03]"
           />
         )}
 
         <div className="relative z-20 h-full flex flex-col justify-end min-h-[400px] text-left">
           {category && (
-            <span className={`${categoryClass || 'bg-tertiary-fixed text-on-tertiary-fixed'} px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest self-start mb-4 shadow-sm select-none`}>
+            <span
+              className={`${categoryClass || 'bg-tertiary-fixed text-on-tertiary-fixed'} px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest self-start mb-4 shadow-sm select-none`}
+            >
               {category}
             </span>
           )}
-          
+
           <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight font-headline">
             {title}
           </h2>
-          
+
           <p className="text-slate-100 text-sm md:text-base mb-6 max-w-2xl leading-relaxed font-body">
             {subtitle}
           </p>
-          
-          <button 
+
+          <button
             onClick={(e) => {
               e.stopPropagation();
               handleCardClick();
@@ -79,24 +82,27 @@ const NewsCard = ({
 
   // 2. RENDER PARA NOTICIA HORIZONTAL SECUNDARIA (SECONDARY)
   return (
-    <article 
+    <article
       onClick={handleCardClick}
       className="md:col-span-6 bg-surface-container-lowest rounded-xl p-6 flex flex-col sm:flex-row gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-surface-container-highest hover:-translate-y-1 hover:shadow-lg transition-all duration-300 text-left cursor-pointer"
     >
       {image && (
         <div className="w-full sm:w-48 h-48 rounded-xl overflow-hidden flex-shrink-0">
-          <img 
-            alt={title} 
-            src={image} 
+          <img
+            loading="lazy"
+            alt={title}
+            src={image}
             className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
           />
         </div>
       )}
-      
+
       <div className="flex flex-col justify-between flex-grow min-w-0">
         <div>
           {category && (
-            <span className={`text-xs font-bold uppercase tracking-widest ${categoryClass || 'text-primary'} mb-2.5 block select-none`}>
+            <span
+              className={`text-xs font-bold uppercase tracking-widest ${categoryClass || 'text-primary'} mb-2.5 block select-none`}
+            >
               {category}
             </span>
           )}
@@ -107,8 +113,8 @@ const NewsCard = ({
             {subtitle}
           </p>
         </div>
-        
-        <button 
+
+        <button
           onClick={(e) => {
             e.stopPropagation();
             handleCardClick();

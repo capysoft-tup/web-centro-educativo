@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
 import Button from './Button';
-import logo from '../assets/logo.png';
+import { images } from '../services/imagesConfig';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ noButtons = false }) => {
@@ -39,7 +39,7 @@ const Navbar = ({ noButtons = false }) => {
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <img
-            src={logo}
+            src={images.logo}
             alt="Logo Educar para Transformar"
             className="navbar-logo-icon"
             onError={(e) => (e.target.style.display = 'none')}
