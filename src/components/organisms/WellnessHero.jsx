@@ -18,28 +18,21 @@ const WellnessHero = ({
 
       <div className="wellness-hero-content">
         <Badge text={badgeText} variant="secondary" className="mb-4" />
-        
+
         <h1 className="wellness-hero-title">
-          Cuidando el <span className="text-gradient">Bienestar</span> de Nuestra Comunidad
+          Cuidando el <span className="text-gradient">Bienestar</span> de
+          Nuestra Comunidad
         </h1>
-        
-        <p className="wellness-hero-description">
-          {description}
-        </p>
+
+        <p className="wellness-hero-description">{description}</p>
 
         <div className="wellness-hero-actions">
-          <button 
-            className="hero-btn-primary" 
-            onClick={onScheduleClick}
-          >
+          <button className="hero-btn-primary" onClick={onScheduleClick}>
             <Icon name="calendar_month" className="text-xl" />
             <span>Agendar Cita</span>
           </button>
-          
-          <button 
-            className="hero-btn-secondary" 
-            onClick={onEmergencyClick}
-          >
+
+          <button className="hero-btn-secondary" onClick={onEmergencyClick}>
             <Icon name="call" className="text-xl" />
             <span>Emergencias</span>
           </button>
@@ -47,9 +40,10 @@ const WellnessHero = ({
       </div>
 
       <div className="wellness-hero-image-container">
-        <img 
-          src={imageUrl} 
-          alt="Estudiantes sonriendo en el campus" 
+        <img
+          loading="lazy"
+          src={imageUrl}
+          alt="Estudiantes sonriendo en el campus"
           className="wellness-hero-image"
         />
       </div>

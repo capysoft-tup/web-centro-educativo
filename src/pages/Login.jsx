@@ -193,6 +193,7 @@ const Login = () => {
           <div className="relative z-10">
             <div className="mb-8">
               <img
+                loading="lazy"
                 alt="Logo Educar para Transformar"
                 className="h-20 w-auto object-contain bg-white rounded-xl p-2 shadow-lg"
                 src={images.logo}
@@ -248,6 +249,7 @@ const Login = () => {
             {/* Mobile Logo (visible only on small screens) */}
             <div className="lg:hidden mb-10 text-center flex flex-col items-center mt-6">
               <img
+                loading="lazy"
                 alt="Logo Educar para Transformar"
                 className="h-16 w-auto object-contain mb-4 bg-white rounded-xl p-2 shadow-md"
                 src={images.logo}

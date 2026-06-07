@@ -11,6 +11,7 @@ const NotFound = () => {
       <Navbar />
       <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
         <img
+          loading="lazy"
           src={images.notFound404}
           alt="404"
           style={{ maxWidth: '600px', display: 'block', margin: '0 auto 20px' }}

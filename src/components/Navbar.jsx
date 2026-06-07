@@ -39,6 +39,7 @@ const Navbar = ({ noButtons = false }) => {
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <img
+            loading="lazy"
             src={images.logo}
             alt="Logo Educar para Transformar"
             className="navbar-logo-icon"

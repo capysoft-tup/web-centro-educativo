@@ -90,6 +90,7 @@ const GalleryGrid = ({ onVisitClick }) => {
         {/* Imagen del lateral derecho con recurso local */}
         <div className="hidden md:block absolute right-0 top-0 bottom-0 w-1/3">
           <img
+            loading="lazy"
             alt="Estudiantes sonriendo compartiendo en el campus"
             className="w-full h-full object-cover rounded-l-[4rem] transform hover:scale-102 transition-transform duration-500"
             src={employment}

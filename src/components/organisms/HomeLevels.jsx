@@ -28,6 +28,7 @@ const HomeLevels = ({ onExploreLevels }) => {
         >
           <div className="absolute inset-0 z-0">
             <img
+              loading="lazy"
               alt="Nivel Inicial"
               className="w-full h-full object-cover opacity-60 mix-blend-multiply group-hover:scale-[1.03] opacity-90 transition-transform duration-700"
               src={images.nivelInicial}
@@ -63,6 +64,7 @@ const HomeLevels = ({ onExploreLevels }) => {
         >
           <div className="absolute inset-0 z-0">
             <img
+              loading="lazy"
               alt="Nivel Primario"
               className="w-full h-full object-cover opacity-10 mix-blend-overlay group-hover:scale-[1.01] opacity-20 group-hover:opacity-60 transition-opacity"
               src={images.primaria}
@@ -100,6 +102,7 @@ const HomeLevels = ({ onExploreLevels }) => {
         >
           <div className="absolute inset-0 z-0">
             <img
+              loading="lazy"
               alt="Nivel Secundario"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay group-hover:scale-[1.01] transition-transform duration-600"
               src={images.secundaria}

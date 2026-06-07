@@ -46,6 +46,7 @@ const HomeCampus = ({ onGalleryClick }) => {
           {/* 1. Complejo Acuático (Piscina) - col-span-2, row-span-2 */}
           <div className="md:col-span-2 md:row-span-2 rounded-[2rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
+              loading="lazy"
               alt="Piscina olímpica techada del colegio"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={pool}
@@ -60,6 +61,7 @@ const HomeCampus = ({ onGalleryClick }) => {
           {/* 2. Campos Deportivos (Cancha) - col-span-2, row-span-1 */}
           <div className="md:col-span-2 rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
+              loading="lazy"
               alt="Campos deportivos del colegio"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={stadium}
@@ -74,6 +76,7 @@ const HomeCampus = ({ onGalleryClick }) => {
           {/* 3. Laboratorios STEAM (Laboratorio) - col-span-1, row-span-1 */}
           <div className="rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
+              loading="lazy"
               alt="Laboratorio de ciencias STEAM"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={lab}
