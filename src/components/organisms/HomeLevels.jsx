@@ -1,13 +1,10 @@
 import React from 'react';
 import Icon from '../atoms/Icon';
-import inicial from '../../assets/nivel-inicial.png';
-import secundaria from '../../assets/secundaria.webp';
-import primaria from '../../assets/primaria.jpg';
-
+import { images } from '../../services/imagesConfig';
 /**
  * Componente HomeLevels (Organismo)
  * Cuadrícula Bento para mostrar los Niveles Educativos (Inicial, Primaria, Secundaria).
- * 
+ *
  * @param {Function} onExploreLevels - Callback para navegar a los detalles de los niveles.
  */
 const HomeLevels = ({ onExploreLevels }) => {
@@ -32,8 +29,8 @@ const HomeLevels = ({ onExploreLevels }) => {
           <div className="absolute inset-0 z-0">
             <img
               alt="Nivel Inicial"
-              className="w-full h-full object-cover opacity-60 mix-blend-multiply group-hover:scale-[1.03] transition-transform duration-700"
-              src={inicial}
+              className="w-full h-full object-cover opacity-60 mix-blend-multiply group-hover:scale-[1.03] opacity-90 transition-transform duration-700"
+              src={images.nivelInicial}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-secondary-container via-secondary-container/90 to-transparent"></div>
           </div>
@@ -66,11 +63,11 @@ const HomeLevels = ({ onExploreLevels }) => {
         >
           <div className="absolute inset-0 z-0">
             <img
-              alt="Nivel Secundario"
-              className="w-full h-full object-cover opacity-10 mix-blend-overlay group-hover:scale-[1.01] transition-transform duration-600"
-              src={primaria}
+              alt="Nivel Primario"
+              className="w-full h-full object-cover opacity-10 mix-blend-overlay group-hover:scale-[1.01] opacity-20 group-hover:opacity-60 transition-opacity"
+              src={images.primaria}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-tertiary-container to-tertiary-fixed-dim opacity-40 group-hover:opacity-60 transition-opacity"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-tertiary-container to-tertiary-fixed-dim opacity-10 group-hover:opacity-60 transition-opacity"></div>
           </div>
 
           <div className="relative z-10 h-full flex flex-col justify-between">
@@ -105,7 +102,7 @@ const HomeLevels = ({ onExploreLevels }) => {
             <img
               alt="Nivel Secundario"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay group-hover:scale-[1.01] transition-transform duration-600"
-              src={secundaria}
+              src={images.secundaria}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/95 to-transparent"></div>
           </div>
@@ -120,7 +117,7 @@ const HomeLevels = ({ onExploreLevels }) => {
               </h3>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 text-left">
+            <div className="flex text-white flex-col md:flex-row justify-between items-start md:items-end gap-6 text-left">
               <p className="text-primary-container text-white primary-fixed font-body max-w-2xl text-base md:text-lg leading-relaxed">
                 Preparación pre-universitaria integral, enfoque en tecnología,
                 liderazgo y proyectos de impacto social comunitario.

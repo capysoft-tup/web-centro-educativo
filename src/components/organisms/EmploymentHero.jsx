@@ -2,8 +2,8 @@ import React from 'react';
 import Icon from '../atoms/Icon';
 
 // Importar recurso local
-import employment from '../../assets/employment.png';
-
+import { images } from '../../services/imagesConfig';
+const { employment } = images;
 /**
  * Componente EmploymentHero (Organismo)
  * Sección Hero inicial para la página de empleo.

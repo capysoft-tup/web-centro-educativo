@@ -5,12 +5,8 @@ import NewsCard from '../components/molecules/NewsCard';
 import EventCard from '../components/molecules/EventCard';
 import NewsHero from '../components/organisms/NewsHero';
 
-// Importar recursos gráficos locales
-import feria from '../assets/feria.jpeg';
-import lectura from '../assets/lectura.jpg';
-import basket from '../assets/basket.jpg';
-import robotica from '../assets/robotica.webp';
-import pool from '../assets/pool.png';
+import { images } from '../services/imagesConfig';
+const { pool, robotica, feria, basket, lectura } = images;
 
 const News = () => {
   // Mock event list data
@@ -23,7 +19,7 @@ const News = () => {
       info: '10:00 AM - Campus Principal',
       icon: 'schedule',
       dateBgClass: 'bg-secondary-fixed text-on-secondary-fixed',
-      glowClass: 'bg-secondary-container'
+      glowClass: 'bg-secondary-container',
     },
     {
       id: 'event-2',
@@ -33,7 +29,7 @@ const News = () => {
       info: 'Auditorio Escolar',
       icon: 'location_on',
       dateBgClass: 'bg-primary-container text-on-primary-container',
-      glowClass: 'bg-primary-container'
+      glowClass: 'bg-primary-container',
     },
     {
       id: 'event-3',
@@ -43,75 +39,80 @@ const News = () => {
       info: 'Galería Principal',
       icon: 'palette',
       dateBgClass: 'bg-tertiary-container text-on-tertiary-container',
-      glowClass: 'bg-tertiary-container'
-    }
+      glowClass: 'bg-tertiary-container',
+    },
   ];
 
   // Featured large article data with local asset
   const featuredArticle = {
     id: 'featured-1',
     title: 'Feria de Ciencias 2024: Innovación Estudiantil',
-    subtitle: 'Nuestros alumnos de secundaria presentaron proyectos increíbles sobre energías renovables y robótica aplicada. ¡Un orgullo para toda la comunidad!',
+    subtitle:
+      'Nuestros alumnos de secundaria presentaron proyectos increíbles sobre energías renovables y robótica aplicada. ¡Un orgullo para toda la comunidad!',
     category: 'Destacado',
     categoryClass: 'bg-tertiary-fixed text-on-tertiary-fixed',
     image: feria,
-    buttonText: 'Leer más'
+    buttonText: 'Leer más',
   };
 
-  // Pre-loaded secondary news items with local assets
   const initialSecondaryArticles = [
     {
       id: 'secondary-1',
       title: 'Nuevos Espacios de Lectura al Aire Libre',
-      subtitle: 'Hemos inaugurado tres nuevas zonas verdes equipadas especialmente para fomentar la lectura y el aprendizaje en contacto con la naturaleza durante los recreos.',
+      subtitle:
+        'Hemos inaugurado tres nuevas zonas verdes equipadas especialmente para fomentar la lectura y el aprendizaje en contacto con la naturaleza durante los recreos.',
       category: 'Institucional',
       categoryClass: 'text-primary',
       image: lectura,
-      buttonText: 'Ver detalles'
+      buttonText: 'Ver detalles',
     },
     {
       id: 'secondary-2',
       title: 'Campeones del Torneo Intercolegial',
-      subtitle: 'Nuestra selección sub-16 de baloncesto se consagró campeona regional tras un emocionante partido final. Felicitaciones a los jugadores y al cuerpo técnico.',
+      subtitle:
+        'Nuestra selección sub-16 de baloncesto se consagró campeona regional tras un emocionante partido final. Felicitaciones a los jugadores y al cuerpo técnico.',
       category: 'Deportes',
       categoryClass: 'text-secondary',
       image: basket,
-      buttonText: 'Ver galería'
-    }
+      buttonText: 'Ver galería',
+    },
   ];
 
   // State to hold lazy-loaded articles and UI actions
-  const [secondaryArticles, setSecondaryArticles] = useState(initialSecondaryArticles);
+  const [secondaryArticles, setSecondaryArticles] = useState(
+    initialSecondaryArticles
+  );
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // Lazy load simulator for "Cargar más" using local assets
   const handleLoadMore = () => {
     setIsLoadingMore(true);
-    
+
     setTimeout(() => {
       const extraArticles = [
         {
           id: 'secondary-3',
           title: 'Taller Maker: Robótica e Impresión 3D',
-          subtitle: 'Inscripciones abiertas para el nuevo taller maker donde los estudiantes aprenderán a diseñar, construir e imprimir sus propios prototipos tridimensionales.',
+          subtitle:
+            'Inscripciones abiertas para el nuevo taller maker donde los estudiantes aprenderán a diseñar, construir e imprimir sus propios prototipos tridimensionales.',
           category: 'Tecnología',
           categoryClass: 'text-tertiary',
           image: robotica,
-          buttonText: 'Inscribirse'
+          buttonText: 'Inscribirse',
         },
         {
           id: 'secondary-4',
           title: 'Inauguración de la Pileta Climatizada',
-          subtitle: 'A partir de la próxima semana comienzan los entrenamientos de natación libre y las clases curriculares en nuestro moderno complejo climatizado.',
+          subtitle:
+            'A partir de la próxima semana comienzan los entrenamientos de natación libre y las clases curriculares en nuestro moderno complejo climatizado.',
           category: 'Deportes',
           categoryClass: 'text-secondary',
           image: pool,
-          buttonText: 'Ver horarios'
-        }
+          buttonText: 'Ver horarios',
+        },
       ];
 
-      setSecondaryArticles(prev => [...prev, ...extraArticles]);
+      setSecondaryArticles((prev) => [...prev, ...extraArticles]);
       setIsLoadingMore(false);
       setHasMore(false); // Hide the button since there is no more data to load
     }, 1200);
@@ -131,7 +132,6 @@ const News = () => {
 
         {/* Bento Grid Layout (Articles & Events sidebar) */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          
           {/* Featured News Molecule */}
           <NewsCard
             variant="featured"
@@ -177,22 +177,37 @@ const News = () => {
               />
             ))}
           </div>
-
         </div>
 
         {/* Load More Button Section */}
         {hasMore && (
           <div className="mt-12 flex justify-center animate-in fade-in duration-300">
-            <button 
+            <button
               onClick={handleLoadMore}
               disabled={isLoadingMore}
               className="bg-surface-container-high hover:bg-surface-container-highest text-on-surface px-8 py-3.5 rounded-full font-bold transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed shadow-md"
             >
               {isLoadingMore ? (
                 <>
-                  <svg className="animate-spin h-5 w-5 text-on-surface" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin h-5 w-5 text-on-surface"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   <span>Cargando noticias...</span>
                 </>
@@ -205,7 +220,6 @@ const News = () => {
             </button>
           </div>
         )}
-
       </main>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from '../atoms/Icon';
-import escuela from '../../assets/escuela.jpg';
-import logo from '../../assets/logo.png';
+import { images } from '../../services/imagesConfig';
 import Badge from '../atoms/Badge';
 
 /**
@@ -19,7 +18,7 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
         <img
           alt="Campus"
           className="w-full h-full object-cover opacity-15 mix-blend-multiply"
-          src={escuela}
+          src={images.escuela}
         />
         <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface"></div>
@@ -69,7 +68,7 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
             <img
               alt="Educar para Transformar Logo"
               className="w-full h-full object-cover opacity-100 transition-transform duration-600 hover:scale-125"
-              src={logo}
+              src={images.logo}
             />
           </div>
         </div>
