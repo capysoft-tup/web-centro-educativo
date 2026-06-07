@@ -1,11 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../services/firebase';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  signInWithCustomToken, 
-  signOut 
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithCustomToken,
+  signOut,
+  updatePassword
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -130,7 +131,6 @@ export const AuthProvider = ({ children }) => {
       }
     } else {
       // Para Padres / Personal: Usar SDK cliente de Firebase para cambiar la contraseña
-      const { updatePassword } = await import('firebase/auth');
       await updatePassword(auth.currentUser, newPassword);
 
       // Notificar al backend para que limpie el flag mustChangePassword en Firestore
