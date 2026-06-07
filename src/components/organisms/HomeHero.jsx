@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from '../atoms/Icon';
-import escuela from '../../assets/escuela.jpg';
-import logo from '../../assets/logo.png';
+import { images } from '../../services/imagesConfig';
 import Badge from '../atoms/Badge';
 
 /**
@@ -17,9 +16,10 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
       {/* Imagen de fondo atenuada de la escuela */}
       <div className="absolute inset-0 z-0">
         <img
+          loading="lazy"
           alt="Campus"
           className="w-full h-full object-cover opacity-15 mix-blend-multiply"
-          src={escuela}
+          src={images.escuela}
         />
         <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface"></div>
@@ -29,7 +29,12 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
         {/* Contenido Izquierdo */}
         <div className="flex flex-col gap-6 text-left animate-in fade-in duration-500">
           <span className="text-tertiary font-extrabold uppercase tracking-wider text-sm flex items-center gap-2 select-none">
-            <Badge text="Excelencia asegurada" variant="tertiary" animated={true} className="text-3xl" />
+            <Badge
+              text="Excelencia asegurada"
+              variant="tertiary"
+              animated={true}
+              className="text-3xl"
+            />
           </span>
 
           <h1 className="text-5xl md:text-7xl font-extrabold text-on-surface leading-tight font-headline">
@@ -67,9 +72,10 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
 
             {/* Logo Local Reutilizado */}
             <img
+              loading="lazy"
               alt="Educar para Transformar Logo"
               className="w-full h-full object-cover opacity-100 transition-transform duration-600 hover:scale-125"
-              src={logo}
+              src={images.logo}
             />
           </div>
         </div>

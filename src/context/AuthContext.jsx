@@ -1,11 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../services/firebase';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  signInWithCustomToken, 
-  signOut 
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithCustomToken,
+  signOut,
+  updatePassword
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -72,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   const loginReal = async (identifier, password, role) => {
     if (role === 'Estudiante') {
       // Iniciar sesión de alumno usando la Cloud Function cf_loginStudent (devuelve customToken)
-      const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
+      const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1' : 'https://us-central1-centro-educativo-f5cc5.cloudfunctions.net');
       const response = await fetch(`${FUNCTIONS_BASE_URL}/cf_loginStudent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,7 +108,7 @@ export const AuthProvider = ({ children }) => {
   const changePasswordReal = async (newPassword) => {
     if (!user) throw new Error("No hay un usuario autenticado.");
 
-    const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1';
+    const FUNCTIONS_BASE_URL = import.meta.env.VITE_FUNCTIONS_BASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5001/centro-educativo-f5cc5/us-central1' : 'https://us-central1-centro-educativo-f5cc5.cloudfunctions.net');
     const idToken = await auth.currentUser.getIdToken(true);
 
     if (user.role === 'Estudiante') {
@@ -130,7 +131,6 @@ export const AuthProvider = ({ children }) => {
       }
     } else {
       // Para Padres / Personal: Usar SDK cliente de Firebase para cambiar la contraseña
-      const { updatePassword } = await import('firebase/auth');
       await updatePassword(auth.currentUser, newPassword);
 
       // Notificar al backend para que limpie el flag mustChangePassword en Firestore

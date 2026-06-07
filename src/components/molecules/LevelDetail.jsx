@@ -69,12 +69,17 @@ const LevelDetail = ({
 
   // Bloque de imagen
   const imageBlock = (
-    <div className={`lg:col-span-7 ${imageLeft ? 'order-1' : 'order-1 lg:order-2'}`}>
-      <div className={`relative w-full aspect-video lg:aspect-[4/3] rounded-[3rem] bg-surface-container-high overflow-hidden ${borderClass} ${shadowClass} ghost-border group cursor-pointer shadow-md`}>
+    <div
+      className={`lg:col-span-7 ${imageLeft ? 'order-1' : 'order-1 lg:order-2'}`}
+    >
+      <div
+        className={`relative w-full aspect-video lg:aspect-[4/3] rounded-[3rem] bg-surface-container-high overflow-hidden ${borderClass} ${shadowClass} ghost-border group cursor-pointer shadow-md`}
+      >
         {image && (
-          <img 
-            alt={altText || title} 
-            src={image} 
+          <img
+            loading="lazy"
+            alt={altText || title}
+            src={image}
             className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
           />
         )}
