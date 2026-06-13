@@ -23,13 +23,17 @@ const GalleryCard = ({
   badgeBgClass = 'bg-secondary-container text-on-secondary-container',
   badgeTextClass = 'font-label text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block',
   spanClass = 'col-span-1',
+  onClick,
   children
 }) => {
   
   // Si se pasa children, asumimos que es una tarjeta de contenido personalizado (ej. "+50 Espacios")
   if (children) {
     return (
-      <div className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low`}>
+      <div 
+        onClick={onClick}
+        className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low cursor-pointer`}
+      >
         {children}
       </div>
     );
@@ -37,7 +41,8 @@ const GalleryCard = ({
 
   return (
     <div
-      className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low`}
+      onClick={onClick}
+      className={`${spanClass} relative rounded-xl overflow-hidden group bg-surface-container-low cursor-pointer`}
     >
       {/* Imagen con animación de escala al hacer hover */}
       {image && (
