@@ -12,7 +12,7 @@ const { pool, stadium, lab, employment } = images;
  *
  * @param {Function} onVisitClick - Callback disparado al hacer clic en "Agendar Visita".
  */
-const GalleryGrid = ({ onVisitClick }) => {
+const GalleryGrid = ({ onVisitClick, onImageClick }) => {
   const spaces = [
     {
       id: 'aquatic',
@@ -42,7 +42,7 @@ const GalleryGrid = ({ onVisitClick }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[250px] animate-in fade-in slide-in-from-bottom-6 duration-700">
       {/* 1. Renderizado dinámico de tarjetas de imagen mediante .map con imágenes locales */}
-      {spaces.map((space) => (
+      {spaces.map((space, index) => (
         <GalleryCard
           key={space.id}
           title={space.title}
@@ -50,11 +50,15 @@ const GalleryGrid = ({ onVisitClick }) => {
           altText={space.altText}
           badgeText={space.badgeText}
           spanClass={space.spanClass}
+          onClick={() => onImageClick && onImageClick(index)}
         />
       ))}
 
-      {/* 2. Tarjeta Informativa Especial ("+50 Espacios") usando Children */}
-      <GalleryCard spanClass="col-span-1 md:col-span-1 row-span-1">
+      {/* 2. Tarjeta Informativa Especial ("Ver más espacios") usando Children */}
+      <GalleryCard 
+        spanClass="col-span-1 md:col-span-1 row-span-1"
+        onClick={() => onImageClick && onImageClick(3)}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-tertiary to-tertiary-container flex flex-col justify-center items-center text-center p-6 text-on-tertiary">
           <Icon
             name="photo_library"
@@ -62,10 +66,10 @@ const GalleryGrid = ({ onVisitClick }) => {
             className="text-on-tertiary text-5xl mb-4"
           />
           <h2 className="font-headline text-xl font-bold text-on-tertiary mb-2">
-            +50 Espacios
+            Ver más espacios
           </h2>
           <p className="font-body text-sm text-on-tertiary/90">
-            Diseñados para el futuro
+            Explora las instalaciones
           </p>
         </div>
       </GalleryCard>
