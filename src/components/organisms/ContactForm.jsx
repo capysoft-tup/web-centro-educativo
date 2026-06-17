@@ -176,7 +176,6 @@ const ContactForm = () => {
               <option value="Trabaja con nosotros">Trabaja con nosotros</option>
               <option value="Otro">Otro</option>
             </select>
-            <Icon name="expand_more" className="contact-select-arrow" />
           </div>
         </div>
 

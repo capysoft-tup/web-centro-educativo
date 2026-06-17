@@ -4,23 +4,53 @@ import "../styles/Footer.css";
 
 const Footer = () => {
     return (
-        <footer className="custom-footer">
-            <div className="footer-content">
-                <div className="footer-info">
-                    <h2 className="footer-title">Educar Para Transformar</h2>
-                    <p className="footer-copyright">
-                        © 2026 INSTITUTO EDUCAR PARA TRANSFORMAR. RESISTENCIA, CHACO.
-                    </p>
-                </div>
-                <div className="footer-links">
-                    <Link to="/" className="footer-link">FACEBOOK</Link>
-                    <Link to="/" className="footer-link">INSTAGRAM</Link>
-                    <Link to="/" className="footer-link">WHATSAPP</Link>
-                    <Link to="/" className="footer-link">UBICACIÓN</Link>
-                    <Link to="/privacy" className="footer-link">PRIVACIDAD</Link>
-                </div>
-            </div>
-        </footer>
+      <footer className="custom-footer">
+        <div className="footer-content">
+          <div className="footer-info">
+            <h2 className="footer-title">Educar Para Transformar</h2>
+            <p className="footer-copyright">
+              © 2026 INSTITUTO EDUCAR PARA TRANSFORMAR. RESISTENCIA, CHACO.
+            </p>
+          </div>
+          <div className="footer-links">
+            <Link
+              to="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              FACEBOOK
+            </Link>
+            <Link
+              to="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              INSTAGRAM
+            </Link>
+            <Link
+              to="https://www.whatsapp.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              WHATSAPP
+            </Link>
+            <Link
+              to="https://maps.app.goo.gl/W7UVjMBdcku6eaPm7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              UBICACIÓN
+            </Link>
+            <Link to="/privacy" className="footer-link">
+              PRIVACIDAD
+            </Link>
+          </div>
+        </div>
+      </footer>
     );
 };
 
