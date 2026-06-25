@@ -42,47 +42,47 @@ const HomeCampus = ({ onGalleryClick }) => {
         </div>
 
         {/* Grilla Bento del Campus */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px] animate-in fade-in slide-in-from-bottom-6 duration-700">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[180px] sm:auto-rows-[220px] md:auto-rows-[250px] animate-in fade-in slide-in-from-bottom-6 duration-700">
           {/* 1. Complejo Acuático (Piscina) - col-span-2, row-span-2 */}
-          <div className="md:col-span-2 md:row-span-2 rounded-[2rem] overflow-hidden relative group shadow-sm cursor-pointer">
+          <div className="col-span-2 row-span-2 rounded-[2rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
               loading="lazy"
               alt="Piscina olímpica techada del colegio"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={pool}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-              <h3 className="text-white font-headline text-2xl font-bold">
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6 sm:p-8">
+              <h3 className="text-white font-headline text-xl sm:text-2xl font-bold">
                 Complejo Acuático
               </h3>
             </div>
           </div>
 
           {/* 2. Campos Deportivos (Cancha) - col-span-2, row-span-1 */}
-          <div className="md:col-span-2 rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
+          <div className="col-span-2 md:col-span-2 rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
               loading="lazy"
               alt="Campos deportivos del colegio"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={stadium}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-              <h3 className="text-white font-headline text-xl font-bold">
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5 sm:p-6">
+              <h3 className="text-white font-headline text-lg sm:text-xl font-bold">
                 Campos Deportivos
               </h3>
             </div>
           </div>
 
           {/* 3. Laboratorios STEAM (Laboratorio) - col-span-1, row-span-1 */}
-          <div className="rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
+          <div className="col-span-1 rounded-[1.5rem] overflow-hidden relative group shadow-sm cursor-pointer">
             <img
               loading="lazy"
               alt="Laboratorio de ciencias STEAM"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               src={lab}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-              <h3 className="text-white font-headline text-lg font-bold">
+            <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 sm:p-6">
+              <h3 className="text-white font-headline text-base sm:text-lg font-bold">
                 Laboratorios STEAM
               </h3>
             </div>
@@ -91,16 +91,16 @@ const HomeCampus = ({ onGalleryClick }) => {
           {/* 4. Botón Tarjeta "Galería Completa" - col-span-1, row-span-1 */}
           <div
             onClick={onGalleryClick}
-            className="rounded-[1.5rem] overflow-hidden relative group bg-tertiary-container flex flex-col items-center justify-center text-center p-6 text-on-tertiary-container hover:bg-tertiary-fixed transition-all duration-300 cursor-pointer shadow-sm border border-tertiary-container/10 hover:scale-[1.02] active:scale-[0.98]"
+            className="col-span-1 rounded-[1.5rem] overflow-hidden relative group bg-tertiary-container flex flex-col items-center justify-center text-center p-4 sm:p-6 text-on-tertiary-container hover:bg-tertiary-fixed transition-all duration-300 cursor-pointer shadow-sm border border-tertiary-container/10 hover:scale-[1.02] active:scale-[0.98]"
           >
             <Icon
               name="photo_library"
-              className="text-4xl mb-2 text-tertiary"
+              className="text-3xl sm:text-4xl mb-2 text-tertiary"
             />
-            <h3 className="font-headline font-bold text-lg">
+            <h3 className="font-headline font-bold text-sm sm:text-lg">
               Galería Completa
             </h3>
-            <p className="text-tertiary-dim text-sm mt-1">Ver más fotos</p>
+            <p className="text-tertiary-dim text-xs sm:text-sm mt-1">Ver más</p>
           </div>
         </div>
       </div>

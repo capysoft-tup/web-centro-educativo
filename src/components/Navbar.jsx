@@ -14,6 +14,7 @@ const Navbar = ({ noButtons = false }) => {
     user?.username ||
     user?.email?.split('@')[0] ||
     'Usuario';
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
@@ -30,6 +31,18 @@ const Navbar = ({ noButtons = false }) => {
     };
   }, []);
 
+  // Disable body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <nav className="custom-navbar">
       <div className="navbar-content">
@@ -44,7 +57,7 @@ const Navbar = ({ noButtons = false }) => {
             className="navbar-logo-icon"
             onError={(e) => (e.target.style.display = 'none')}
           />
-          <span>Educar para Transformar</span>
+          <span className="logo-text">Educar para Transformar</span>
         </Link>
         {!noButtons && (
           <div className="navbar-links">
@@ -170,6 +183,180 @@ const Navbar = ({ noButtons = false }) => {
             </Button>
           )}
         </div>
+
+        {/* Hamburger Menu Button (Mobile) */}
+        {!noButtons && (
+          <button
+            className="navbar-hamburger"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Menú principal"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className="material-symbols-outlined">
+              {isMobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+        )}
+
+        {/* Mobile Menu Backdrop */}
+        {isMobileMenuOpen && !noButtons && (
+          <div
+            className="mobile-menu-backdrop"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Menu Drawer */}
+        {!noButtons && (
+          <div className={`navbar-mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
+            <div className="mobile-drawer-header">
+              <Link
+                to="/"
+                className="navbar-logo"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <img
+                  src={images.logo}
+                  alt="Logo Educar para Transformar"
+                  className="navbar-logo-icon"
+                  onError={(e) => (e.target.style.display = 'none')}
+                />
+                <span className="logo-text">Educar para Transformar</span>
+              </Link>
+              <button
+                className="mobile-drawer-close"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Cerrar menú"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div className="mobile-drawer-links">
+              <NavLink
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">home</span>
+                Inicio
+              </NavLink>
+              <NavLink
+                to="/wellness"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">mindfulness</span>
+                Bienestar
+              </NavLink>
+              <NavLink
+                to="/news"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">newspaper</span>
+                Noticias
+              </NavLink>
+              <NavLink
+                to="/gallery"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">photo_library</span>
+                Galería
+              </NavLink>
+              <NavLink
+                to="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">mail</span>
+                Contacto
+              </NavLink>
+              <NavLink
+                to="/register"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">how_to_reg</span>
+                Inscripciones
+              </NavLink>
+              <NavLink
+                to="/employment-request"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+                }
+              >
+                <span className="material-symbols-outlined">work</span>
+                Empleo
+              </NavLink>
+            </div>
+
+            <div className="mobile-drawer-actions">
+              {isLoggedIn && user ? (
+                <div className="mobile-user-info">
+                  <div className="mobile-user-profile">
+                    <span className="material-symbols-outlined">
+                      account_circle
+                    </span>
+                    <div className="mobile-user-details">
+                      <span className="mobile-user-welcome">Hola,</span>
+                      <span className="mobile-user-name">{displayName}</span>
+                    </div>
+                  </div>
+                  <div className="mobile-user-buttons">
+                    <button
+                      onClick={() => {
+                        alert('Esta sección de perfil aún no está disponible.');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="mobile-action-btn profile-btn"
+                    >
+                      <span className="material-symbols-outlined text-lg">person</span>
+                      Ver Perfil
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMobileMenuOpen(false);
+                        navigate('/');
+                      }}
+                      className="mobile-action-btn logout-btn"
+                    >
+                      <span className="material-symbols-outlined text-lg">logout</span>
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate('/login');
+                  }}
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  Acceso Usuario
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

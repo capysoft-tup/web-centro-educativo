@@ -12,7 +12,7 @@ import Badge from '../atoms/Badge';
  */
 const HomeHero = ({ onStartJourney, onLearnMore }) => {
   return (
-    <section className="relative w-full min-h-[800px] flex items-center justify-center px-6 overflow-hidden">
+    <section className="relative w-full min-h-[600px] md:min-h-[800px] flex items-center justify-center py-16 md:py-24 px-6 overflow-hidden">
       {/* Imagen de fondo atenuada de la escuela */}
       <div className="absolute inset-0 z-0">
         <img
@@ -37,28 +37,28 @@ const HomeHero = ({ onStartJourney, onLearnMore }) => {
             />
           </span>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold text-on-surface leading-tight font-headline">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-on-surface leading-tight font-headline">
             Educar para <br />
             <span className="text-secondary bg-gradient-to-r from-secondary to-green-600 bg-clip-text text-transparent">
               Transformar
             </span>
           </h1>
 
-          <p className="text-xl text-on-surface-variant font-body max-w-lg leading-relaxed">
+          <p className="text-lg md:text-xl text-on-surface-variant font-body max-w-lg leading-relaxed">
             Inspiramos, desafiamos y empoderamos a la próxima generación de
             líderes en un ambiente de aprendizaje vibrante y seguro.
           </p>
 
-          <div className="flex flex-wrap gap-4 mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full sm:w-auto">
             <button
               onClick={onStartJourney}
-              className="bg-secondary text-surface-container-lowest font-headline font-bold px-8 py-4 rounded-full text-lg shadow-[0_20px_40px_rgba(42,71,0,0.15)] hover:bg-secondary-dim hover:-translate-y-1 active:translate-y-0 hover:shadow-lg hover:shadow-secondary/20 transition-all cursor-pointer"
+              className="w-full sm:w-auto bg-secondary text-surface-container-lowest font-headline font-bold px-8 py-4 rounded-full text-lg shadow-[0_20px_40px_rgba(42,71,0,0.15)] hover:bg-secondary-dim hover:-translate-y-1 active:translate-y-0 hover:shadow-lg hover:shadow-secondary/20 transition-all cursor-pointer text-center"
             >
               Comenzar el Viaje
             </button>
             <button
               onClick={onLearnMore}
-              className="bg-surface-container-highest text-on-surface font-headline font-semibold px-8 py-4 rounded-full text-lg hover:bg-surface-variant hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-slate-300/40"
+              className="w-full sm:w-auto bg-surface-container-highest text-on-surface font-headline font-semibold px-8 py-4 rounded-full text-lg hover:bg-surface-variant hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-slate-300/40 text-center"
             >
               Saber Más
             </button>
