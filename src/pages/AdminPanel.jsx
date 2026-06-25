@@ -510,85 +510,222 @@ const AdminPanel = () => {
                     <p className="text-sm mt-1">Prueba con otros criterios de búsqueda o añade nuevos usuarios.</p>
                   </div>
                 ) : dashboardSubTab === 'students' ? (
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
-                        <th className="py-4 px-6">Estudiante / ID</th>
-                        <th className="py-4 px-6">Nivel</th>
-                        <th className="py-4 px-6">Tutor / Contacto</th>
-                        <th className="py-4 px-6">Estado (Clave)</th>
-                        <th className="py-4 px-6 text-center">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
+                  <>
+                    {/* Vista Desktop (Tabla) */}
+                    <div className="hidden md:block">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
+                            <th className="py-4 px-6">Estudiante / ID</th>
+                            <th className="py-4 px-6">Nivel</th>
+                            <th className="py-4 px-6">Tutor / Contacto</th>
+                            <th className="py-4 px-6">Estado (Clave)</th>
+                            <th className="py-4 px-6 text-center">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
+                          {filteredStudents.map((student) => {
+                            const parent = parentsList.find(p => p.id === student.parentId) || { nombre: 'Sin Tutor', email: '', dni: '', mustChangePassword: true, emailInvalid: false };
+                            return (
+                              <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
+                                <td className="py-5 px-6">
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="font-bold text-slate-800">{student.nombre}</span>
+                                    <span className="text-xs text-slate-400 font-mono">
+                                      {student.studentID_login} | DNI: {student.dni} | Género: {student.genero || 'No especificado'}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className="py-5 px-6">
+                                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                    (student.nivel || 'inicial') === 'inicial' ? 'bg-secondary-container/20 text-secondary' :
+                                    (student.nivel || 'inicial') === 'primaria' ? 'bg-primary-container/20 text-primary' :
+                                    'bg-tertiary-container/20 text-tertiary-dim'
+                                  }`}>
+                                    {(student.nivel || 'inicial').toUpperCase()}
+                                  </span>
+                                </td>
+                                <td className="py-5 px-6">
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="font-semibold text-slate-700">{parent.nombre}</span>
+                                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                                      <span>{parent.email || student.emailPadre}</span>
+                                      {parent.dni && <span className="text-slate-300">| DNI: {parent.dni}</span>}
+                                      {parent.emailInvalid && (
+                                        <span className="flex items-center gap-0.5 text-red-500 font-bold uppercase tracking-wider text-[9px] bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
+                                          <Icon name="error" className="text-[10px]" />
+                                          Email Inválido
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="py-5 px-6">
+                                  <div className="flex flex-col gap-1.5">
+                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
+                                      student.mustChangePassword
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                        : 'bg-green-50 text-green-700 border border-green-200'
+                                    }`}>
+                                      <span className={`h-1.5 w-1.5 rounded-full ${student.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
+                                      Alumno: {student.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
+                                    </span>
+                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
+                                      parent.mustChangePassword
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                        : 'bg-green-50 text-green-700 border border-green-200'
+                                    }`}>
+                                      <span className={`h-1.5 w-1.5 rounded-full ${parent.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
+                                      Tutor: {parent.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className="py-5 px-6">
+                                  <div className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-1.5 bg-orange-50/50 p-1.5 rounded-lg border border-orange-100">
+                                      <span className="text-[10px] font-bold text-orange-700 uppercase">Alumno:</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleResetPassword(student.id, 'student', student.dni)}
+                                        title="Restablecer clave del estudiante al DNI"
+                                        className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
+                                      >
+                                        <Icon name="lock_reset" className="text-sm" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingUser({
+                                          id: student.id,
+                                          type: 'student',
+                                          fields: {
+                                            nombre: student.nombre || '',
+                                            dni: student.dni || '',
+                                            fechaNacimiento: student.fechaNacimiento || '',
+                                            nivel: student.nivel || 'inicial',
+                                            genero: student.genero || 'Masculino'
+                                          }
+                                        })}
+                                        title="Editar datos del alumno"
+                                        className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
+                                      >
+                                        <Icon name="edit" className="text-sm" />
+                                      </button>
+                                    </div>
+                                    {student.parentId && (
+                                      <div className="flex items-center gap-1.5 bg-indigo-50/50 p-1.5 rounded-lg border border-indigo-100">
+                                        <span className="text-[10px] font-bold text-indigo-700 uppercase">Tutor:</span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleResetPassword(student.parentId, 'parent', parent.dni)}
+                                          title="Restablecer clave del tutor al DNI"
+                                          className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                        >
+                                          <Icon name="lock_reset" className="text-sm" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setEditingUser({
+                                            id: student.parentId,
+                                            type: 'parent',
+                                            fields: {
+                                              nombre: parent.nombre || '',
+                                              dni: parent.dni || '',
+                                              email: parent.email || student.emailPadre || ''
+                                            }
+                                          })}
+                                          title="Editar datos del tutor"
+                                          className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                        >
+                                          <Icon name="edit" className="text-sm" />
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Vista Mobile (Tarjetas) */}
+                    <div className="block md:hidden space-y-4 p-4 bg-slate-50/50">
                       {filteredStudents.map((student) => {
                         const parent = parentsList.find(p => p.id === student.parentId) || { nombre: 'Sin Tutor', email: '', dni: '', mustChangePassword: true, emailInvalid: false };
                         return (
-                          <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
-                            <td className="py-5 px-6">
-                              <div className="flex flex-col gap-0.5">
-                                <span className="font-bold text-slate-800">{student.nombre}</span>
-                                <span className="text-xs text-slate-400 font-mono">
-                                  {student.studentID_login} | DNI: {student.dni} | Género: {student.genero || 'No especificado'}
-                                </span>
+                          <div key={student.id} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4 text-left">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex flex-col gap-1">
+                                <span className="font-bold text-base text-slate-800 leading-tight">{student.nombre}</span>
+                                <span className="text-xs text-slate-400 font-mono">{student.studentID_login}</span>
                               </div>
-                            </td>
-                            <td className="py-5 px-6">
-                              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase whitespace-nowrap ${
                                 (student.nivel || 'inicial') === 'inicial' ? 'bg-secondary-container/20 text-secondary' :
                                 (student.nivel || 'inicial') === 'primaria' ? 'bg-primary-container/20 text-primary' :
                                 'bg-tertiary-container/20 text-tertiary-dim'
                               }`}>
                                 {(student.nivel || 'inicial').toUpperCase()}
                               </span>
-                            </td>
-                            <td className="py-5 px-6">
-                              <div className="flex flex-col gap-0.5">
-                                <span className="font-semibold text-slate-700">{parent.nombre}</span>
-                                <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                                  <span>{parent.email || student.emailPadre}</span>
-                                  {parent.dni && <span className="text-slate-300">| DNI: {parent.dni}</span>}
-                                  {parent.emailInvalid && (
-                                    <span className="flex items-center gap-0.5 text-red-500 font-bold uppercase tracking-wider text-[9px] bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
-                                      <Icon name="error" className="text-[10px]" />
-                                      Email Inválido
-                                    </span>
-                                  )}
-                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-2 text-xs border-t border-b border-slate-50 py-2">
+                              <div>
+                                <span className="text-slate-400 block font-semibold uppercase tracking-wider text-[9px]">DNI Alumno</span>
+                                <span className="font-bold text-slate-700">{student.dni}</span>
                               </div>
-                            </td>
-                            <td className="py-5 px-6">
-                              <div className="flex flex-col gap-1.5">
-                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
-                                  student.mustChangePassword
-                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                    : 'bg-green-50 text-green-700 border border-green-200'
-                                }`}>
-                                  <span className={`h-1.5 w-1.5 rounded-full ${student.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
-                                  Alumno: {student.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
-                                </span>
-                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold w-max ${
-                                  parent.mustChangePassword
-                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                    : 'bg-green-50 text-green-700 border border-green-200'
+                              <div>
+                                <span className="text-slate-400 block font-semibold uppercase tracking-wider text-[9px]">Género</span>
+                                <span className="font-bold text-slate-700">{student.genero || 'No especificado'}</span>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <span className="text-slate-400 block font-semibold uppercase tracking-wider text-[9px]">Tutor Responsable</span>
+                              <div className="flex flex-col">
+                                <span className="font-bold text-xs text-slate-700">{parent.nombre}</span>
+                                <span className="text-xs text-slate-500">{parent.email || student.emailPadre}</span>
+                                {parent.emailInvalid && (
+                                  <span className="flex items-center gap-1 text-red-500 font-bold uppercase tracking-wider text-[9px] mt-1">
+                                    <Icon name="error" className="text-[10px]" />
+                                    Email Inválido
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                student.mustChangePassword ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-green-50 text-green-700 border border-green-100'
+                              }`}>
+                                <span className={`h-1.5 w-1.5 rounded-full ${student.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
+                                Alumno: {student.mustChangePassword ? 'Temporal' : 'Activa'}
+                              </span>
+                              {student.parentId && (
+                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                  parent.mustChangePassword ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-green-50 text-green-700 border border-green-100'
                                 }`}>
                                   <span className={`h-1.5 w-1.5 rounded-full ${parent.mustChangePassword ? 'bg-amber-500' : 'bg-green-600'}`} />
-                                  Tutor: {parent.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada'}
+                                  Tutor: {parent.mustChangePassword ? 'Temporal' : 'Activa'}
                                 </span>
-                              </div>
-                            </td>
-                            <td className="py-5 px-6">
-                              <div className="flex flex-col gap-2">
-                                <div className="flex items-center gap-1.5 bg-orange-50/50 p-1.5 rounded-lg border border-orange-100">
-                                  <span className="text-[10px] font-bold text-orange-700 uppercase">Alumno:</span>
+                              )}
+                            </div>
+
+                            <div className="flex gap-2.5 pt-2 border-t border-slate-50">
+                              <div className="flex-1 flex flex-col gap-1 bg-slate-50 p-2 rounded-xl border border-slate-100 text-center">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase">Alumno</span>
+                                <div className="flex justify-center gap-2 mt-1">
                                   <button
+                                    type="button"
                                     onClick={() => handleResetPassword(student.id, 'student', student.dni)}
-                                    title="Restablecer clave del estudiante al DNI"
-                                    className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
+                                    title="Restablecer clave al DNI"
+                                    className="flex-1 py-1.5 px-2 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50 flex items-center justify-center gap-1"
                                   >
                                     <Icon name="lock_reset" className="text-sm" />
+                                    <span className="text-[10px] font-bold">Reset</span>
                                   </button>
                                   <button
+                                    type="button"
                                     onClick={() => setEditingUser({
                                       id: student.id,
                                       type: 'student',
@@ -600,23 +737,30 @@ const AdminPanel = () => {
                                         genero: student.genero || 'Masculino'
                                       }
                                     })}
-                                    title="Editar datos del alumno"
-                                    className="p-1 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50"
+                                    title="Editar datos"
+                                    className="flex-1 py-1.5 px-2 rounded bg-white text-orange-600 hover:bg-orange-50 transition-colors cursor-pointer border border-orange-200/50 flex items-center justify-center gap-1"
                                   >
                                     <Icon name="edit" className="text-sm" />
+                                    <span className="text-[10px] font-bold">Editar</span>
                                   </button>
                                 </div>
-                                {student.parentId && (
-                                  <div className="flex items-center gap-1.5 bg-indigo-50/50 p-1.5 rounded-lg border border-indigo-100">
-                                    <span className="text-[10px] font-bold text-indigo-700 uppercase">Tutor:</span>
+                              </div>
+
+                              {student.parentId && (
+                                <div className="flex-1 flex flex-col gap-1 bg-slate-50 p-2 rounded-xl border border-slate-100 text-center">
+                                  <span className="text-[9px] font-bold text-slate-400 uppercase">Tutor</span>
+                                  <div className="flex justify-center gap-2 mt-1">
                                     <button
+                                      type="button"
                                       onClick={() => handleResetPassword(student.parentId, 'parent', parent.dni)}
-                                      title="Restablecer clave del tutor al DNI"
-                                      className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                      title="Restablecer clave al DNI"
+                                      className="flex-1 py-1.5 px-2 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50 flex items-center justify-center gap-1"
                                     >
                                       <Icon name="lock_reset" className="text-sm" />
+                                      <span className="text-[10px] font-bold">Reset</span>
                                     </button>
                                     <button
+                                      type="button"
                                       onClick={() => setEditingUser({
                                         id: student.parentId,
                                         type: 'parent',
@@ -626,95 +770,169 @@ const AdminPanel = () => {
                                           email: parent.email || student.emailPadre || ''
                                         }
                                       })}
-                                      title="Editar datos del tutor"
-                                      className="p-1 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50"
+                                      title="Editar datos"
+                                      className="flex-1 py-1.5 px-2 rounded bg-white text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer border border-indigo-200/50 flex items-center justify-center gap-1"
                                     >
                                       <Icon name="edit" className="text-sm" />
+                                      <span className="text-[10px] font-bold">Editar</span>
                                     </button>
                                   </div>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         );
                       })}
-                    </tbody>
-                  </table>
+                    </div>
+                  </>
                 ) : (
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
-                        <th className="py-4 px-6">Nombre / DNI</th>
-                        <th className="py-4 px-6">Rol Institucional</th>
-                        <th className="py-4 px-6">Contacto (Email)</th>
-                        <th className="py-4 px-6">Estado (Clave)</th>
-                        <th className="py-4 px-6 text-center">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
+                  <>
+                    {/* Vista Desktop (Tabla) */}
+                    <div className="hidden md:block">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 font-label font-bold text-xs uppercase tracking-wider">
+                            <th className="py-4 px-6">Nombre / DNI</th>
+                            <th className="py-4 px-6">Rol Institucional</th>
+                            <th className="py-4 px-6">Contacto (Email)</th>
+                            <th className="py-4 px-6">Estado (Clave)</th>
+                            <th className="py-4 px-6 text-center">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 font-body text-sm text-slate-700">
+                          {filteredStaff.map((staff) => (
+                            <tr key={staff.id} className="hover:bg-slate-50/50 transition-colors">
+                              <td className="py-5 px-6">
+                                <div className="flex flex-col gap-0.5">
+                                  <span className="font-bold text-slate-800">{staff.nombre}</span>
+                                  <span className="text-xs text-slate-400 font-mono">DNI: {staff.dni || 'No registrado'}</span>
+                                </div>
+                              </td>
+                              <td className="py-5 px-6">
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                  staff.role === 'user_admin' ? 'bg-red-50 text-red-700 border border-red-200' :
+                                  staff.role === 'Administrativo' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                                  'bg-green-50 text-green-700 border border-green-200'
+                                }`}>
+                                  {staff.role === 'user_admin' ? 'Administrador General' :
+                                   staff.role === 'Administrativo' ? 'Administrativo' :
+                                   'Docente / Staff'}
+                                </span>
+                              </td>
+                              <td className="py-5 px-6">
+                                <span className="text-slate-600">{staff.email}</span>
+                              </td>
+                              <td className="py-5 px-6">
+                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                                  staff.mustChangePassword 
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                                    : 'bg-green-50 text-green-700 border border-green-200'
+                                }`}>
+                                  <span className={`h-2 w-2 rounded-full ${staff.mustChangePassword ? 'bg-amber-500 animate-pulse' : 'bg-green-600'}`} />
+                                  {staff.mustChangePassword ? 'Temporal (DNI)' : 'Clave Segura'}
+                                </span>
+                              </td>
+                              <td className="py-5 px-6 text-center">
+                                <div className="flex justify-center items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleResetPassword(staff.id, 'administrative', staff.dni)}
+                                    title="Restablecer clave del personal al DNI"
+                                    className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors cursor-pointer border border-orange-200/50"
+                                  >
+                                    <Icon name="lock_reset" className="text-base" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingUser({
+                                      id: staff.id,
+                                      type: 'administrative',
+                                      fields: {
+                                        nombre: staff.nombre || '',
+                                        dni: staff.dni || '',
+                                        email: staff.email || '',
+                                        role: staff.role || 'Staff'
+                                      }
+                                    })}
+                                    title="Editar datos del personal"
+                                    className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors cursor-pointer border border-indigo-200/50"
+                                  >
+                                    <Icon name="edit" className="text-base" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Vista Mobile (Tarjetas) */}
+                    <div className="block md:hidden space-y-4 p-4 bg-slate-50/50">
                       {filteredStaff.map((staff) => (
-                        <tr key={staff.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="py-5 px-6">
-                            <div className="flex flex-col gap-0.5">
-                              <span className="font-bold text-slate-800">{staff.nombre}</span>
+                        <div key={staff.id} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4 text-left">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex flex-col gap-1">
+                              <span className="font-bold text-base text-slate-800 leading-tight">{staff.nombre}</span>
                               <span className="text-xs text-slate-400 font-mono">DNI: {staff.dni || 'No registrado'}</span>
                             </div>
-                          </td>
-                          <td className="py-5 px-6">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase whitespace-nowrap ${
                               staff.role === 'user_admin' ? 'bg-red-50 text-red-700 border border-red-200' :
                               staff.role === 'Administrativo' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                               'bg-green-50 text-green-700 border border-green-200'
                             }`}>
-                              {staff.role === 'user_admin' ? 'Administrador General' :
-                               staff.role === 'Administrativo' ? 'Administrativo' :
-                               'Docente / Staff'}
+                              {staff.role === 'user_admin' ? 'Admin' :
+                               staff.role === 'Administrativo' ? 'Admin. Interno' :
+                               'Docente'}
                             </span>
-                          </td>
-                          <td className="py-5 px-6">
-                            <span className="text-slate-600">{staff.email}</span>
-                          </td>
-                          <td className="py-5 px-6">
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                              staff.mustChangePassword 
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                                : 'bg-green-50 text-green-700 border border-green-200'
+                          </div>
+
+                          <div>
+                            <span className="text-slate-400 block font-semibold uppercase tracking-wider text-[9px]">Correo Electrónico</span>
+                            <span className="text-xs text-slate-700 font-medium">{staff.email}</span>
+                          </div>
+
+                          <div>
+                            <span className="text-slate-400 block font-semibold uppercase tracking-wider text-[9px]">Estado de Credenciales</span>
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold mt-1 ${
+                              staff.mustChangePassword ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-green-50 text-green-700 border border-green-100'
                             }`}>
-                              <span className={`h-2 w-2 rounded-full ${staff.mustChangePassword ? 'bg-amber-500 animate-pulse' : 'bg-green-600'}`} />
-                              {staff.mustChangePassword ? 'Temporal (DNI)' : 'Clave Segura'}
+                              <span className={`h-1.5 w-1.5 rounded-full ${staff.mustChangePassword ? 'bg-amber-500 animate-pulse' : 'bg-green-600'}`} />
+                              Clave: {staff.mustChangePassword ? 'Temporal (DNI)' : 'Cambiada / Segura'}
                             </span>
-                          </td>
-                          <td className="py-5 px-6 text-center">
-                            <div className="flex justify-center items-center gap-2">
-                              <button
-                                onClick={() => handleResetPassword(staff.id, 'administrative', staff.dni)}
-                                title="Restablecer clave del personal al DNI"
-                                className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors cursor-pointer border border-orange-200/50"
-                              >
-                                <Icon name="lock_reset" className="text-base" />
-                              </button>
-                              <button
-                                onClick={() => setEditingUser({
-                                  id: staff.id,
-                                  type: 'administrative',
-                                  fields: {
-                                    nombre: staff.nombre || '',
-                                    dni: staff.dni || '',
-                                    email: staff.email || '',
-                                    role: staff.role || 'Staff'
-                                  }
-                                })}
-                                title="Editar datos del personal"
-                                className="p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors cursor-pointer border border-indigo-200/50"
-                              >
-                                <Icon name="edit" className="text-base" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                          </div>
+
+                          <div className="flex gap-3 pt-3 border-t border-slate-50">
+                            <button
+                              type="button"
+                              onClick={() => handleResetPassword(staff.id, 'administrative', staff.dni)}
+                              className="flex-1 py-2.5 px-4 rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors cursor-pointer border border-orange-200/50 flex items-center justify-center gap-2 text-xs font-bold"
+                            >
+                              <Icon name="lock_reset" className="text-sm" />
+                              <span>Restablecer Clave</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingUser({
+                                id: staff.id,
+                                type: 'administrative',
+                                fields: {
+                                  nombre: staff.nombre || '',
+                                  dni: staff.dni || '',
+                                  email: staff.email || '',
+                                  role: staff.role || 'Staff'
+                                }
+                              })}
+                              className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors cursor-pointer border border-indigo-200/50 flex items-center justify-center gap-2 text-xs font-bold"
+                            >
+                              <Icon name="edit" className="text-sm" />
+                              <span>Editar Datos</span>
+                            </button>
+                          </div>
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -723,7 +941,7 @@ const AdminPanel = () => {
 
         {/* Creation Tab Content */}
         {activeTab === 'create' && user?.role === 'user_admin' && (
-          <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl max-w-4xl mx-auto">
+          <div className="bg-white rounded-3xl p-5 sm:p-8 border border-slate-100 shadow-xl max-w-4xl mx-auto">
             <h2 className="font-headline text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-4">
               <Icon name="person_add" className="text-orange-500" />
               <span>
@@ -823,7 +1041,7 @@ const AdminPanel = () => {
 
                   <div className="space-y-4">
                     {students.map((student, idx) => (
-                      <div key={idx} className="relative border border-slate-100 p-6 rounded-2xl bg-white shadow-sm space-y-4 text-left">
+                      <div key={idx} className="relative border border-slate-100 p-4 sm:p-6 rounded-2xl bg-white shadow-sm space-y-4 text-left">
                         {students.length > 1 && (
                           <button
                             type="button"
@@ -930,7 +1148,7 @@ const AdminPanel = () => {
             ) : (
               <form onSubmit={handleCreateAdminSubmit} className="space-y-8">
                 {/* Personal Section */}
-                <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-200/60 space-y-4 text-left">
+                <div className="bg-slate-50/50 p-4 sm:p-6 rounded-2xl border border-slate-200/60 space-y-4 text-left">
                   <h3 className="font-label font-bold text-xs uppercase tracking-widest text-slate-500">Datos del Personal / Administrativo</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
