@@ -22,7 +22,9 @@ const NewsCard = ({
   category,
   categoryClass = '',
   buttonText = 'Leer más',
-  onButtonClick
+  onButtonClick,
+  showDelete = false,
+  onDeleteClick
 }) => {
 
   const handleCardClick = () => {
@@ -46,6 +48,21 @@ const NewsCard = ({
             src={image}
             className="absolute inset-0 w-full h-full object-cover opacity-50 rounded-xl z-0 transition-transform duration-700 group-hover:scale-[1.03]"
           />
+        )}
+
+        {/* Delete Button for Admin */}
+        {showDelete && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onDeleteClick) onDeleteClick();
+            }}
+            title="Eliminar Noticia"
+            className="absolute top-6 right-6 z-30 p-2.5 bg-red-600/90 hover:bg-red-650 text-white rounded-full transition-all shadow-lg hover:scale-105 active:scale-95 border-none cursor-pointer flex items-center justify-center"
+          >
+            <Icon name="delete" className="text-lg" />
+          </button>
         )}
 
         <div className="relative z-20 h-full flex flex-col justify-end min-h-[400px] text-left">
@@ -84,8 +101,23 @@ const NewsCard = ({
   return (
     <article
       onClick={handleCardClick}
-      className="md:col-span-6 bg-surface-container-lowest rounded-xl p-6 flex flex-col sm:flex-row gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-surface-container-highest hover:-translate-y-1 hover:shadow-lg transition-all duration-300 text-left cursor-pointer"
+      className="md:col-span-6 bg-surface-container-lowest rounded-xl p-6 flex flex-col sm:flex-row gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-surface-container-highest hover:-translate-y-1 hover:shadow-lg transition-all duration-300 text-left cursor-pointer relative"
     >
+      {/* Delete Button for Admin */}
+      {showDelete && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onDeleteClick) onDeleteClick();
+          }}
+          title="Eliminar Noticia"
+          className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-550 rounded-full transition-all shadow-sm hover:scale-105 active:scale-95 border border-slate-200/50 cursor-pointer flex items-center justify-center"
+        >
+          <Icon name="delete" className="text-sm" />
+        </button>
+      )}
+
       {image && (
         <div className="w-full sm:w-48 h-48 rounded-xl overflow-hidden flex-shrink-0">
           <img
