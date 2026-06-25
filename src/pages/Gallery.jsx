@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '../components/Navbar';
 import Icon from '../components/atoms/Icon';
 import SuccessModal from '../components/molecules/SuccessModal';
 import GalleryHero from '../components/organisms/GalleryHero';
 import GalleryGrid from '../components/organisms/GalleryGrid';
 import { images } from '../services/imagesConfig';
+
+// Carousel Image Data
+const carouselImages = [
+  { url: images.pool, title: 'Complejo Acuático', description: 'Pileta olímpica techada y climatizada para natación libre y curricular.' },
+  { url: images.stadium, title: 'Canchas Profesionales', description: 'Canchas de fútbol de césped sintético profesional.' },
+  { url: images.lab, title: 'Laboratorio Maker', description: 'Espacio de experimentación y diseño de proyectos innovadores.' },
+  { url: images.lectura, title: 'Biblioteca y Zona de Lectura', description: 'Áreas verdes equipadas para incentivar la lectura al aire libre.' },
+  { url: images.basket, title: 'Microestadio de Básquet', description: 'Cancha cubierta reglamentaria para entrenamiento y torneos.' },
+  { url: images.escuela, title: 'Edificio Principal', description: 'Acceso principal al campus educativo en Resistencia, Chaco.' },
+  { url: images.nivelInicial, title: 'Aulas de Nivel Inicial', description: 'Salones adaptados con estimulación temprana y seguridad.' },
+  { url: images.primaria, title: 'Aulas de Primaria', description: 'Espacios dinámicos equipados con pantallas táctiles e internet.' },
+  { url: images.robotica, title: 'Taller de Robótica e Impresión 3D', description: 'Equipamiento de robótica y tecnología para proyectos makers.' },
+  { url: images.secundaria, title: 'Aulas de Secundaria', description: 'Mobiliario flexible para el trabajo colaborativo en equipo.' },
+];
 
 const Gallery = () => {
   // Modal state for booking a visit
@@ -25,27 +39,15 @@ const Gallery = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  // Carousel Image Data
-  const carouselImages = [
-    { url: images.pool, title: 'Complejo Acuático', description: 'Pileta olímpica techada y climatizada para natación libre y curricular.' },
-    { url: images.stadium, title: 'Canchas Profesionales', description: 'Canchas de fútbol de césped sintético profesional.' },
-    { url: images.lab, title: 'Laboratorio Maker', description: 'Espacio de experimentación y diseño de proyectos innovadores.' },
-    { url: images.lectura, title: 'Biblioteca y Zona de Lectura', description: 'Áreas verdes equipadas para incentivar la lectura al aire libre.' },
-    { url: images.basket, title: 'Microestadio de Básquet', description: 'Cancha cubierta reglamentaria para entrenamiento y torneos.' },
-    { url: images.escuela, title: 'Edificio Principal', description: 'Acceso principal al campus educativo en Resistencia, Chaco.' },
-    { url: images.nivelInicial, title: 'Aulas de Nivel Inicial', description: 'Salones adaptados con estimulación temprana y seguridad.' },
-    { url: images.primaria, title: 'Aulas de Primaria', description: 'Espacios dinámicos equipados con pantallas táctiles e internet.' },
-    { url: images.robotica, title: 'Taller de Robótica e Impresión 3D', description: 'Equipamiento de robótica y tecnología para proyectos makers.' },
-    { url: images.secundaria, title: 'Aulas de Secundaria', description: 'Mobiliario flexible para el trabajo colaborativo en equipo.' },
-  ];
 
-  const handleNext = () => {
+
+  const handleNext = useCallback(() => {
     setCarouselIndex((prev) => (prev + 1) % carouselImages.length);
-  };
+  }, []);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setCarouselIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
-  };
+  }, []);
 
   // Keyboard navigation for Lightbox
   useEffect(() => {
@@ -63,7 +65,7 @@ const Gallery = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isCarouselOpen]);
+  }, [isCarouselOpen, handleNext, handlePrev]);
 
   // Touch handlers for mobile swiping
   const handleTouchStart = (e) => {
@@ -279,23 +281,27 @@ const Gallery = () => {
       {/* 3. Modal de Carrusel / Lightbox (Premium visual overlay) */}
       {isCarouselOpen && (
         <div 
-          className="fixed inset-0 bg-slate-950/95 backdrop-blur-lg z-50 flex flex-col justify-between p-4 md:p-8 animate-in fade-in duration-300 select-none"
+          className="fixed inset-0 bg-slate-950/95 backdrop-blur-lg flex flex-col justify-between p-4 md:p-8 animate-in fade-in duration-300 select-none"
+          style={{ zIndex: 3000 }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
+          {/* Botón de cerrar flotante (Fijo en la esquina superior derecha para accesibilidad en mobile) */}
+          <button 
+            type="button"
+            onClick={() => setIsCarouselOpen(false)}
+            className="fixed top-4 right-4 z-50 w-12 h-12 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white flex items-center justify-center transition-all cursor-pointer border border-slate-700/80 shadow-2xl active:scale-95"
+            title="Cerrar (Esc)"
+          >
+            <Icon name="close" className="text-2xl" />
+          </button>
+
           {/* Barra superior del modal */}
           <div className="flex items-center justify-between w-full text-white z-10 px-4">
             <span className="font-label text-xs uppercase tracking-widest font-bold opacity-75">
               Instalaciones ({carouselIndex + 1} de {carouselImages.length})
             </span>
-            <button 
-              onClick={() => setIsCarouselOpen(false)}
-              className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer border border-white/10"
-              title="Cerrar (Esc)"
-            >
-              <Icon name="close" className="text-2xl" />
-            </button>
           </div>
 
           {/* Area principal (Imagen y Botones laterales) */}
@@ -303,8 +309,9 @@ const Gallery = () => {
             
             {/* Botón Izquierda */}
             <button
+              type="button"
               onClick={handlePrev}
-              className="absolute left-2 md:left-6 z-10 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer border border-white/10 shadow-lg active:scale-95"
+              className="absolute left-2 md:left-6 z-10 w-14 h-14 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white flex items-center justify-center transition-all cursor-pointer border border-slate-700/80 shadow-xl active:scale-95"
               title="Anterior (←)"
             >
               <span className="material-symbols-outlined text-3xl">chevron_left</span>
@@ -321,8 +328,9 @@ const Gallery = () => {
 
             {/* Botón Derecha */}
             <button
+              type="button"
               onClick={handleNext}
-              className="absolute right-2 md:right-6 z-10 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer border border-white/10 shadow-lg active:scale-95"
+              className="absolute right-2 md:right-6 z-10 w-14 h-14 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white flex items-center justify-center transition-all cursor-pointer border border-slate-700/80 shadow-xl active:scale-95"
               title="Siguiente (→)"
             >
               <span className="material-symbols-outlined text-3xl">chevron_right</span>

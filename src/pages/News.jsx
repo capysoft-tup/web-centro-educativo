@@ -213,7 +213,7 @@ const News = () => {
                 </>
               ) : (
                 <>
-                  <span>Cargar más noticias</span>
+                  <span>Ver más noticias</span>
                   <Icon name="refresh" className="text-lg font-bold" />
                 </>
               )}

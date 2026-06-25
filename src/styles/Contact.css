@@ -426,21 +426,6 @@
 }
 
 /* Responsividad */
-@media (max-width: 992px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  
-  .contact-left-col {
-    grid-column: span 1;
-  }
-  
-  .contact-right-col {
-    grid-column: span 1;
-  }
-}
-
 @media (max-width: 768px) {
   .contact-main-content {
     padding-top: 6.5rem;
@@ -448,8 +433,42 @@
     padding-right: 1.25rem;
   }
   
+  .contact-header {
+    margin-bottom: 2rem;
+  }
+
   .contact-title {
     font-size: 2.2rem;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .contact-left-col {
+    grid-column: span 1;
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.25rem;
+  }
+  
+  .contact-right-col {
+    grid-column: span 1;
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-info-card {
+    padding: 1.5rem;
+  }
+
+  .contact-map-card {
+    height: 200px;
   }
   
   .contact-form-card {
