@@ -20,11 +20,11 @@ const HomeLevels = ({ onExploreLevels }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px] animate-in fade-in slide-in-from-bottom-6 duration-700">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[400px] animate-in fade-in slide-in-from-bottom-6 duration-700">
         {/* 1. Nivel Inicial (col-span-2) */}
         <div
           onClick={onExploreLevels}
-          className="bg-secondary-container rounded-[2rem] p-8 relative overflow-hidden group shadow-[0_20px_40px_rgba(172,248,71,0.15)] hover:shadow-[0_20px_40px_rgba(172,248,71,0.3)] hover:-translate-y-1 transition-all md:col-span-2 cursor-pointer border border-secondary-container/10"
+          className="bg-secondary-container rounded-[2rem] p-6 sm:p-8 min-h-[380px] md:min-h-0 relative overflow-hidden group shadow-[0_20px_40px_rgba(172,248,71,0.15)] hover:shadow-[0_20px_40px_rgba(172,248,71,0.3)] hover:-translate-y-1 transition-all md:col-span-2 cursor-pointer border border-secondary-container/10"
         >
           <div className="absolute inset-0 z-0">
             <img
@@ -60,7 +60,7 @@ const HomeLevels = ({ onExploreLevels }) => {
         {/* 2. Nivel Primario (col-span-1) */}
         <div
           onClick={onExploreLevels}
-          className="bg-tertiary-container rounded-[2rem] p-8 relative overflow-hidden group shadow-[0_20px_40px_rgba(255,149,90,0.15)] hover:shadow-[0_20px_40px_rgba(255,149,90,0.3)] hover:-translate-y-1 transition-all cursor-pointer border border-tertiary-container/10"
+          className="bg-tertiary-container rounded-[2rem] p-6 sm:p-8 min-h-[380px] md:min-h-0 relative overflow-hidden group shadow-[0_20px_40px_rgba(255,149,90,0.15)] hover:shadow-[0_20px_40px_rgba(255,149,90,0.3)] hover:-translate-y-1 transition-all cursor-pointer border border-tertiary-container/10"
         >
           <div className="absolute inset-0 z-0">
             <img
@@ -98,7 +98,7 @@ const HomeLevels = ({ onExploreLevels }) => {
         {/* 3. Nivel Secundario (col-span-3, h-[300px]) */}
         <div
           onClick={onExploreLevels}
-          className="bg-primary rounded-[2rem] p-8 relative overflow-hidden group shadow-[0_20px_40px_rgba(13,88,184,0.2)] hover:shadow-[0_20px_40px_rgba(13,88,184,0.35)] hover:-translate-y-1 transition-all md:col-span-3 h-[300px] cursor-pointer border border-primary/10"
+          className="bg-primary rounded-[2rem] p-6 sm:p-8 relative overflow-hidden group shadow-[0_20px_40px_rgba(13,88,184,0.2)] hover:shadow-[0_20px_40px_rgba(13,88,184,0.35)] hover:-translate-y-1 transition-all md:col-span-3 min-h-[300px] md:h-[300px] cursor-pointer border border-primary/10"
         >
           <div className="absolute inset-0 z-0">
             <img
