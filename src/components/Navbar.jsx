@@ -100,6 +100,7 @@ const Navbar = ({ noButtons = false }) => {
             displayName={displayName}
             logout={logout}
             navigate={navigate}
+            isAdmin={isAdmin}
           />
         )}
       </div>
@@ -280,6 +281,7 @@ const MobileDrawer = ({
   displayName,
   logout,
   navigate,
+  isAdmin
 }) => {
   return (
     <div className={`navbar-mobile-drawer ${isOpen ? 'open' : ''}`}>
@@ -405,6 +407,19 @@ const MobileDrawer = ({
                 <span className="material-symbols-outlined text-lg">person</span>
                 Ver Perfil
               </button>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate('/admin');
+                    onClose();
+                  }}
+                  className="mobile-action-btn profile-btn"
+                >
+                  <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+                  Panel de usuarios
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
